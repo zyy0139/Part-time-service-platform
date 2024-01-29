@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zyy.dao.UserMapper">
+    <resultMap id="BaseResultMapper" type="com.zyy.entity.Users">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sex" jdbcType="VARCHAR" property="sex"/>
+        <result column="age" jdbcType="VARCHAR" property="age"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="school" jdbcType="VARCHAR" property="school"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+    </resultMap>
+    
+    <insert id="userRegister" parameterType="com.zyy.entity.Users">
+        insert into 'user' (id, account, password, email)
+        value (#{id},#{account},#{password},#{email})
+    </insert>
+    
+    <update id="updateAllById" parameterType="string">
+        update user SET name=#{name},sex=#{sex},age=#{age},address=#{address},
+                        school=#{school},profession=#{profession},phone=#{phone}
+                where id=#{id}
+    </update>
+
+    <select id="selectAllById" parameterType="string" resultMap="BaseResultMapper">
+        select * from user where id=#{id}
+    </select>
+</mapper>

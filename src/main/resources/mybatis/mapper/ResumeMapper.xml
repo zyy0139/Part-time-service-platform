@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zyy.dao.ResumeMapper">
+    <resultMap id="BaseResultMap" type="com.zyy.entity.Resumes">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="career" jdbcType="VARCHAR" property="career" />
+        <result column="experience" jdbcType="VARCHAR"  property="experience" />
+    </resultMap>
+
+</mapper>
