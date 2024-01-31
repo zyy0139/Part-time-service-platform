@@ -6,4 +6,5 @@ public interface UserService {
     public int Regist(Users users);
     public int UpdateAllById(String id);
     public Users SelectAllById(String id);
+    public String SelectIdByEmail(String email);
 }

@@ -29,4 +29,8 @@
     <select id="selectAllById" parameterType="string" resultMap="BaseResultMapper">
         select * from user where id=#{id}
     </select>
+
+    <select id="selectIdByEmail" parameterType="string" resultMap="BaseResultMapper">
+        select id from user where email=#{email}
+    </select>
 </mapper>
