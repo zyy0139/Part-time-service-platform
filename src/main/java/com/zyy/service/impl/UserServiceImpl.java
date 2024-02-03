@@ -4,7 +4,9 @@ import com.zyy.dao.UserMapper;
 import com.zyy.entity.Users;
 import com.zyy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

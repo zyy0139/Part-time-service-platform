@@ -6,18 +6,17 @@ import com.zyy.entity.Users;
 import com.zyy.service.impl.MailServiceImpl;
 import com.zyy.service.impl.UserServiceImpl;
 import com.zyy.util.AuthCodeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @RestController
 @RequestMapping("/zyy/user")
 public class UserController {
@@ -28,8 +27,9 @@ public class UserController {
     private MailServiceImpl mailService;
 
     @RequestMapping("/register")
-    public String Register(@RequestParam("account") String account,@RequestParam("password") String password,
-                            @RequestParam("email") String email){
+    public String Register(@RequestBody String body,HttpServletRequest request){
+        Map<String,Object> map=JSON.parseObject(body,Map.class);
+        String email= String.valueOf(map.get("email"));
         String userId=userService.SelectIdByEmail(email);
         if (userId!=null){
             return "邮箱已注册";
@@ -37,6 +37,8 @@ public class UserController {
         Users user=new Users();
         Random random=new Random();
         String id=String.valueOf(random.nextInt(99999)+300000);
+        String account=String.valueOf(map.get("account"));
+        String password=String.valueOf(map.get("password"));
         user.setId(id);
         user.setAccount(account);
         user.setPassword(password);
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/getEmailCode")
-    public String GetCode(@RequestParam("email") String email, HttpServletRequest request, HttpServletResponse response){
+    public String GetCode(@RequestBody String email, HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map= JSON.parseObject(email,Map.class);
         String mail= (String) map.get("email");
         String code= AuthCodeUtil.getUUID();
@@ -69,7 +71,7 @@ public class UserController {
                 "    </div>\n" +
                 "    <div id=\"context\">\n" +
                 "        <p>欢迎使用大学生智能兼职管理平台</p>\n" +
-                "        <p>您本次的验证码为: "+code+"<span>，用于身份验证，3分钟内有效。</span></p>\n" +
+                "        <p>您本次的验证码为: "+code+"<span>,3分钟内有效。</span></p>\n" +
                 "        <p>请勿泄露和转发。如非本人操作，请忽略此邮件。</p>\n" +
                 "    </div>\n" +
                 "    <div id=\"sign\" style=\"font-size: 13px\">大学生智能兼职管理平台</div>\n" +

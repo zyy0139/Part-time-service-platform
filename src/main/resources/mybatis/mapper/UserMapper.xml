@@ -16,7 +16,7 @@
     </resultMap>
     
     <insert id="userRegister" parameterType="com.zyy.entity.Users">
-        insert into 'user' (id, account, password, email)
+        insert into user (id, account, password, email)
         value (#{id},#{account},#{password},#{email})
     </insert>
     
