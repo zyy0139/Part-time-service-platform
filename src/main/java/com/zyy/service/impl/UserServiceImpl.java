@@ -35,4 +35,9 @@ public class UserServiceImpl implements UserService {
         String id=userMapper.selectIdByEmail(email);
         return id;
     }
+
+    @Override
+    public String SelectEmail(String email) {
+        return null;
+    }
 }
