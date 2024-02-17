@@ -11,4 +11,13 @@
         <result column="phone" jdbcType="VARCHAR" property="phone" />
     </resultMap>
 
+    <insert id="companyRegister" parameterType="com.zyy.entity.Companies">
+        insert into company(id, account, password, email)
+        value (#{id},#{account},#{password},#{email})
+    </insert>
+
+    <select id="selectAllByEmail" parameterType="string" resultMap="BaseResultMap">
+        select * from company where email=#{email}
+    </select>
+
 </mapper>
