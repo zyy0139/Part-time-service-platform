@@ -1,9 +1,9 @@
 package com.zyy.handler;
 
 import com.zyy.exception.BusinessException;
-import com.zyy.util.ResponseUtil;
-import com.zyy.util.Result;
-import com.zyy.util.ResultCode;
+import com.zyy.utils.ResponseUtils;
+import com.zyy.utils.Result;
+import com.zyy.utils.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,6 +25,6 @@ public class RestExceptionHandler {
     public Result businessExceptionHandler(HttpServletRequest request, BusinessException e)
             throws BusinessException {
         log.error("BusinessException异常：{}", e.getMessage());
-        return ResponseUtil.failResult(ResultCode.fail, e.getMessage(), null);
+        return ResponseUtils.failResult(ResultCode.fail, e.getMessage(), null);
     }
 }

@@ -1,6 +1,6 @@
-package com.zyy.util;
+package com.zyy.utils;
 
-public class ResponseUtil {
+public class ResponseUtils {
     public static Result successResult(){
         Result result=new Result();
         result.setCode(200);

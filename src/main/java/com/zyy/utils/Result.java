@@ -1,4 +1,4 @@
-package com.zyy.util;
+package com.zyy.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

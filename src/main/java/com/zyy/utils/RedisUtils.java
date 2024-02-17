@@ -1,4 +1,4 @@
-package com.zyy.util;
+package com.zyy.utils;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 @Component
-public class RedisUtil{
+public class RedisUtils {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 

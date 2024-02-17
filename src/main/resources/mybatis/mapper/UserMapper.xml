@@ -20,10 +20,10 @@
         value (#{id},#{account},#{password},#{email})
     </insert>
     
-    <update id="updateAllById" parameterType="string">
+    <update id="updateAllById" parameterType="com.zyy.entity.Users">
         update user SET name=#{name},sex=#{sex},age=#{age},address=#{address},
                         school=#{school},profession=#{profession},phone=#{phone}
-                where id=#{id}
+                where id=#{userId}
     </update>
 
     <select id="selectAllById" parameterType="string" resultMap="BaseResultMapper">
@@ -33,4 +33,25 @@
     <select id="selectIdByEmail" parameterType="string" resultMap="BaseResultMapper">
         select id from user where email=#{email}
     </select>
+
+    <select id="selectIdByAccount" parameterType="string" resultMap="BaseResultMapper">
+        select id from user where account=#{account}
+    </select>
+
+    <select id="selectPasswordByAccount" parameterType="string" resultMap="BaseResultMapper">
+        select password from user where account=#{account}
+    </select>
+
+    <select id="selectAllByEmail" parameterType="string" resultMap="BaseResultMapper">
+        select * from user where email=#{email}
+    </select>
+
+    <select id="selectAllByEmailAndPassword" parameterType="string" resultMap="BaseResultMapper">
+        select * from user where email=#{email} and password=#{password}
+    </select>
+
+    <select id="selectAllByAccountAndPassword" parameterType="string" resultMap="BaseResultMapper">
+        select * from user where account=#{account} and password=#{password}
+    </select>
+
 </mapper>

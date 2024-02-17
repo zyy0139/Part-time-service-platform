@@ -1,18 +1,18 @@
 package com.zyy.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.util.JsonParserSequence;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Users;
 import com.zyy.service.impl.MailServiceImpl;
 import com.zyy.service.impl.UserServiceImpl;
-import com.zyy.util.*;
+import com.zyy.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -28,29 +28,29 @@ public class UserController {
     private MailServiceImpl mailService;
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtil;
 
     @PostMapping("/register")
     public Result Register(@RequestBody String body, HttpServletRequest request){
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String email= String.valueOf(map.get("email"));
-        String userId=userService.SelectIdByEmail(email);
-        if (userId!=null){
-            return ResponseUtil.failResult(ResultCode.USER_EXIST,"该邮箱已注册");
+        Users users=userService.SelectAllByEmail(email);
+        if (users!=null){
+            return ResponseUtils.failResult(ResultCode.USER_EXIST,"该邮箱已注册");
         }
         String emailCode=String.valueOf(map.get("emailCode"));
         String emailKey=request.getHeader("emailSession");
-//        String value= null;
-//        try {
-//            value = redisUtil.get(emailKey).toString();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseUtil.failResult("验证码错误");
-//        }
-//        redisUtil.del(emailKey);
-//        if (!value.equals(emailCode)){
-//            return ResponseUtil.failResult("验证码错误");
-//        }
+        String value= null;
+        try {
+            value = redisUtil.get(emailKey).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseUtils.failResult("验证码错误");
+        }
+        redisUtil.del(emailKey);
+        if (!value.equals(emailCode)){
+            return ResponseUtils.failResult("验证码错误");
+        }
         Users user=new Users();
         Random random=new Random();
         String id=String.valueOf(random.nextInt(99999)+300000);
@@ -62,9 +62,9 @@ public class UserController {
         user.setEmail(email);
         int result=userService.Regist(user);
         if(result==1){
-            return ResponseUtil.successResult("注册成功");
+            return ResponseUtils.successResult("注册成功");
         }else {
-            return ResponseUtil.failResult(ResultCode.register_fail,"注册失败");
+            return ResponseUtils.failResult(ResultCode.register_fail,"注册失败");
         }
     }
 
@@ -72,8 +72,8 @@ public class UserController {
     public Result GetCode(@RequestBody String email, HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map= JSON.parseObject(email,Map.class);
         String mail= (String) map.get("email");
-        String code=AuthCodeUtil.getUUID();
-        String key=AuthCodeUtil.getUUID();
+        String code= AuthCodeUtils.getUUID();
+        String key= AuthCodeUtils.getUUID();
         redisUtil.set(key,code);
         response.setHeader("emailSession",key);
         String subject="大学生智能兼职管理平台";
@@ -96,24 +96,78 @@ public class UserController {
                 "</html>\n";
         mailService.sendWithHtml(mail,subject,content);
         redisUtil.expire(key,60*3);
-        return ResponseUtil.successResult("发送成功");
+        return ResponseUtils.successResult("发送成功");
     }
 
-    @PostMapping("/emaliLogin")
+    @PostMapping("/emailLogin")
     public Result login(@RequestBody String body,HttpServletResponse response,HttpServletRequest request){
         if(body==null){
-            return ResponseUtil.failResult("参数传入失败");
+            return ResponseUtils.failResult("参数传入失败");
         }
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String email= String.valueOf(map.get("email")) ;
         String code= String.valueOf(map.get("emailCode")) ;
-        String emailkey=request.getHeader("emailSession");
-        if (!code.equals(emailkey)){
-            return ResponseUtil.failResult("验证码错误");
+        String emailKey=request.getHeader("emailSession");
+        String value=redisUtil.get(emailKey).toString();
+        if (!value.equals(code)){
+            return ResponseUtils.failResult("验证码错误");
         }
         Users users=new Users();
         users.setEmail(email);
-        return ResponseUtil.successResult("登录成功");
+        Map map1=userService.token(users);
+        if(map1.get("code").equals("0")){
+            return ResponseUtils.failResult("邮箱或密码错误");
+        }
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        return ResponseUtils.successResult("登录成功");
     }
 
+    @PostMapping("/accountLogin")
+    public Result login2(@RequestBody String body,HttpServletResponse response){
+        if(body==null){
+            return ResponseUtils.failResult("参数传入失败");
+        }
+        Map<String ,Object> map=JSON.parseObject(body,Map.class);
+        String account= String.valueOf(map.get("account"));
+        String password=String.valueOf(map.get("password"));
+        Users users=new Users();
+        users.setAccount(account);
+        users.setPassword(password);
+        Map map1=userService.token(users);
+        if(map1.get("code").equals("0")){
+            return ResponseUtils.failResult("用户名或密码错误");
+        }
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        return ResponseUtils.successResult("登陆成功");
+    }
+
+    @GetMapping("/getUserMessage")
+    public Result getUserMessage(HttpServletRequest request){
+        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String userId=jwt.getSubject();
+        Users users=userService.SelectAllById(userId);
+        Map<String,Object> map=new HashMap<>();
+        map.put("userName",users.getName());
+        map.put("userSex",users.getSex());
+        map.put("userAge",users.getAge());
+        map.put("userAddress",users.getAddress());
+        map.put("userSchool",users.getSchool());
+        map.put("userProfession",users.getProfession());
+        map.put("userPhone",users.getPhone());
+        return ResponseUtils.successResult("success",map);
+    }
+
+    @PostMapping("/updateByUserId")
+    public Result updateByUserId(@RequestBody Users users,HttpServletRequest request){
+        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String userId=jwt.getSubject();
+        int result=userService.UpdateAllById(users,userId);
+        if(result==1){
+            return ResponseUtils.successResult("修改成功");
+        }else {
+            return ResponseUtils.failResult("保存失败");
+        }
+    }
 }

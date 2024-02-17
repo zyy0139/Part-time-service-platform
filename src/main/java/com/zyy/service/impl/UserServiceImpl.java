@@ -3,8 +3,12 @@ package com.zyy.service.impl;
 import com.zyy.dao.UserMapper;
 import com.zyy.entity.Users;
 import com.zyy.service.UserService;
+import com.zyy.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,8 +23,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int UpdateAllById(String id) {
-        int result=userMapper.updateAllById(id);
+    public int UpdateAllById(Users users,String userId) {
+        int result=userMapper.updateAllById(users,userId);
         return result;
     }
 
@@ -37,7 +41,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String SelectEmail(String email) {
-        return null;
+    public String SelectIdByAccount(String account) {
+        String id=userMapper.selectIdByAccount(account);
+        return id;
+    }
+
+    @Override
+    public String SelectPasswordByAccount(String account) {
+        String password=userMapper.selectPasswordByAccount(account);
+        return password;
+    }
+
+    @Override
+    public Map<String, Object> token(Users users) {
+        String account=users.getAccount();
+        String email=users.getEmail();
+        String password=users.getPassword();
+        Users user;
+        if(password==null){
+            user=userMapper.selectAllByEmail(email);
+        }else if(email==null){
+            user=userMapper.selectAllByAccountAndPassword(account,password);
+        }else {
+            user=userMapper.selectAllByEmailAndPassword(email,password);
+        }
+        Map<String,Object> map=new HashMap<>();
+        if(user==null){
+            map.put("code","0");
+            return map;
+        }
+        //将id注入token
+        String id=user.getId();
+        String token= JWTUtils.createToken(id);
+        map=new HashMap<>();
+        map.put("user",user);
+        map.put("token",token);
+        map.put("code","1");
+        map.put("exp",JWTUtils.getDxp(token));
+        return map;
+    }
+
+    @Override
+    public Users SelectAllByEmail(String email) {
+        Users users=userMapper.selectAllByEmail(email);
+        return users;
     }
 }

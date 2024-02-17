@@ -1,4 +1,4 @@
-package com.zyy.util;
+package com.zyy.utils;
 
 public class ResultCode {
     public static final String SUCCESS="成功！";
