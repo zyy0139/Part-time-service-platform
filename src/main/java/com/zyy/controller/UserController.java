@@ -52,8 +52,7 @@ public class UserController {
             return ResponseUtils.failResult("验证码错误");
         }
         Users user=new Users();
-        Random random=new Random();
-        String id=String.valueOf(random.nextInt(99999)+300000);
+        String id=RadomUtils.creatId();
         String account=String.valueOf(map.get("account"));
         String password=String.valueOf(map.get("password"));
         user.setId(id);
