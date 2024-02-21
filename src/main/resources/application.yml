@@ -37,3 +37,9 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
+
+jwt:
+  header: "Authorization" #token返回头部
+  tokenPrefix: "PTSP " #token前缀
+  secret: "20021221zyy" #密钥
+  expireTime: 60 #token有效时间 (分钟) 建议一小时以上
