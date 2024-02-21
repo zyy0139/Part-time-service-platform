@@ -19,4 +19,5 @@ public class Users {
     private String school;
     private String profession; //用户专业
     private String phone;
+    private int isAdmit;
 }
