@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
-import java.util.Random;
 
 @Slf4j
 @RestController
@@ -26,7 +26,7 @@ public class CompanyController {
 
 
     @PostMapping("/register")
-    public Result CompanyRegister(@RequestBody String body, HttpServletRequest request){
+    public Result companyRegister(@RequestBody String body, HttpServletRequest request){
         Map<String,Object> map= JSON.parseObject(body,Map.class);
         String email=String.valueOf(map.get("email"));
         Companies company=companyService.selectAllByEmail(email);
@@ -60,5 +60,47 @@ public class CompanyController {
         }else {
             return ResponseUtils.failResult(ResultCode.register_fail,"注册失败");
         }
+    }
+
+    @PostMapping("/emailLogin")
+    public Result emailLogin(@RequestBody String body, HttpServletRequest request, HttpServletResponse response){
+        if(body==null){
+            return ResponseUtils.failResult("参数传入失败");
+        }
+        Map<String,Object> map=JSON.parseObject(body,Map.class);
+        String email= String.valueOf(map.get("email")) ;
+        String code= String.valueOf(map.get("emailCode")) ;
+        String emailKey=request.getHeader("emailSession");
+        String value=redisUtil.get(emailKey).toString();
+        if (!value.equals(code)){
+            return ResponseUtils.failResult("验证码错误");
+        }
+        Companies companies=new Companies();
+        companies.setEmail(email);
+        Map map1=companyService.token(companies);
+        if(map1.get("code").equals("0")){
+            return ResponseUtils.failResult("邮箱输入错误");
+        }
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        return ResponseUtils.successResult("登录成功");
+    }
+
+    @PostMapping("/accountLogin")
+    public Result accountLogin(@RequestBody String body,HttpServletRequest request,HttpServletResponse response){
+        if(body==null){
+            return ResponseUtils.failResult("参数传入失败");
+        }
+        Map<String,Object> map=JSON.parseObject(body,Map.class);
+        String account=String.valueOf(map.get("account"));
+        String password=String.valueOf(map.get("password"));
+        Companies companies=new Companies();
+        companies.setAccount(account);
+        companies.setPassword(password);
+        Map map1=companyService.token(companies);
+        if(map1.get("code").equals("0")){
+            return ResponseUtils.failResult("邮箱输入错误");
+        }
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        return ResponseUtils.successResult("登录成功");
     }
 }

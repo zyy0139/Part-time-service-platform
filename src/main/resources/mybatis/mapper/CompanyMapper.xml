@@ -20,4 +20,8 @@
         select * from company where email=#{email}
     </select>
 
+    <select id="selectAllByAccountAndPassword" parameterType="string" resultMap="BaseResultMap">
+        select * from company where account=#{account} and password=#{password}
+    </select>
+
 </mapper>

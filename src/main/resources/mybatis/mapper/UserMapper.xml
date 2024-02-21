@@ -13,6 +13,7 @@
         <result column="school" jdbcType="VARCHAR" property="school"/>
         <result column="profession" jdbcType="VARCHAR" property="profession"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="isAdmit" jdbcType="TINYINT" property="isAdmit"/>
     </resultMap>
     
     <insert id="userRegister" parameterType="com.zyy.entity.Users">
