@@ -60,10 +60,8 @@ public class UserServiceImpl implements UserService {
         Users user;
         if(password==null){
             user=userMapper.selectAllByEmail(email);
-        }else if(email==null){
+        }else{
             user=userMapper.selectAllByAccountAndPassword(account,password);
-        }else {
-            user=userMapper.selectAllByEmailAndPassword(email,password);
         }
         Map<String,Object> map=new HashMap<>();
         if(user==null){
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService {
         map.put("user",user);
         map.put("token",token);
         map.put("code","1");
-        map.put("exp",JWTUtils.getDxp(token));
+        map.put("dxp",JWTUtils.getDxp(token));
         return map;
     }
 

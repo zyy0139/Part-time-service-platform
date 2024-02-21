@@ -3,7 +3,6 @@ package com.zyy.controller;
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Users;
-import com.zyy.service.impl.MailServiceImpl;
 import com.zyy.service.impl.UserServiceImpl;
 import com.zyy.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 @Slf4j
 @RestController
@@ -23,9 +21,6 @@ import java.util.Random;
 public class UserController {
     @Autowired
     private UserServiceImpl userService;
-
-    @Autowired
-    private MailServiceImpl mailService;
 
     @Autowired
     private RedisUtils redisUtil;
@@ -67,37 +62,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/getEmailCode")
-    public Result GetCode(@RequestBody String email, HttpServletRequest request, HttpServletResponse response){
-        Map<String,Object> map= JSON.parseObject(email,Map.class);
-        String mail= (String) map.get("email");
-        String code= AuthCodeUtils.getUUID();
-        String key= AuthCodeUtils.getUUID();
-        redisUtil.set(key,code);
-        response.setHeader("emailSession",key);
-        String subject="大学生智能兼职管理平台";
-        String content="<html lang=\"zh\">\n" +
-                "<head>\n" +
-                "    <meta charset=utf-8>\n" +
-                "    <title>ttt</title>\n" +
-                "</head>\n" +
-                "<body>\n" +
-                "    <div id=\"title\">\n" +
-                "        <h2 style=\"color: rgb(6, 171, 255)\">邮箱验证码</h2>\n" +
-                "    </div>\n" +
-                "    <div id=\"context\">\n" +
-                "        <p>欢迎使用大学生智能兼职管理平台</p>\n" +
-                "        <p>您本次的验证码为: "+code+"<span>,三分钟内有效。</span></p>\n" +
-                "        <p>请勿泄露和转发。如非本人操作，请忽略此邮件。</p>\n" +
-                "    </div>\n" +
-                "    <div id=\"sign\" style=\"font-size: 13px\">大学生智能兼职管理平台</div>\n" +
-                "</body>\n" +
-                "</html>\n";
-        mailService.sendWithHtml(mail,subject,content);
-        redisUtil.expire(key,60*3);
-        return ResponseUtils.successResult("发送成功");
-    }
-
     @PostMapping("/emailLogin")
     public Result login(@RequestBody String body,HttpServletResponse response,HttpServletRequest request){
         if(body==null){
@@ -115,7 +79,7 @@ public class UserController {
         users.setEmail(email);
         Map map1=userService.token(users);
         if(map1.get("code").equals("0")){
-            return ResponseUtils.failResult("邮箱或密码错误");
+            return ResponseUtils.failResult("邮箱输入错误");
         }
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
         return ResponseUtils.successResult("登录成功");
