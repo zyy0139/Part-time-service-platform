@@ -35,7 +35,7 @@ public class UserController {
         }
         String emailCode=String.valueOf(map.get("emailCode"));
         String emailKey=request.getHeader("emailSession");
-        String value= null;
+        String value;
         try {
             value = redisUtil.get(emailKey).toString();
         } catch (Exception e) {
@@ -50,9 +50,10 @@ public class UserController {
         String id=RadomUtils.creatId();
         String account=String.valueOf(map.get("account"));
         String password=String.valueOf(map.get("password"));
+        String md5_Password=MD5Utils.getMD5(password);
         user.setId(id);
         user.setAccount(account);
-        user.setPassword(password);
+        user.setPassword(md5_Password);
         user.setEmail(email);
         int result=userService.Regist(user);
         if(result==1){
@@ -93,9 +94,10 @@ public class UserController {
         Map<String ,Object> map=JSON.parseObject(body,Map.class);
         String account= String.valueOf(map.get("account"));
         String password=String.valueOf(map.get("password"));
+        String md5_Password=MD5Utils.getMD5(password);
         Users users=new Users();
         users.setAccount(account);
-        users.setPassword(password);
+        users.setPassword(md5_Password);
         Map map1=userService.token(users);
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("用户名或密码错误");

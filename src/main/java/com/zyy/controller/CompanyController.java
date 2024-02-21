@@ -50,10 +50,11 @@ public class CompanyController {
         String id=RadomUtils.creatId();
         String account=String.valueOf(map.get("account"));
         String password=String.valueOf(map.get("password"));
+        String md5_Password=MD5Utils.getMD5(password);
         companies.setId(id);
         companies.setAccount(account);
         companies.setEmail(email);
-        companies.setPassword(password);
+        companies.setPassword(md5_Password);
         int result=companyService.companyRegister(companies);
         if(result==1){
             return ResponseUtils.successResult("注册成功");
@@ -93,9 +94,10 @@ public class CompanyController {
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String account=String.valueOf(map.get("account"));
         String password=String.valueOf(map.get("password"));
+        String md5_Password=MD5Utils.getMD5(password);
         Companies companies=new Companies();
         companies.setAccount(account);
-        companies.setPassword(password);
+        companies.setPassword(md5_Password);
         Map map1=companyService.token(companies);
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
