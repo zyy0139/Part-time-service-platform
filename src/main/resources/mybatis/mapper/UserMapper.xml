@@ -24,7 +24,7 @@
     <update id="updateAllById" parameterType="com.zyy.entity.Users">
         update user SET name=#{name},sex=#{sex},age=#{age},address=#{address},
                         school=#{school},profession=#{profession},phone=#{phone}
-                where id=#{userId}
+                where id=#{id}
     </update>
 
     <select id="selectAllById" parameterType="string" resultMap="BaseResultMapper">

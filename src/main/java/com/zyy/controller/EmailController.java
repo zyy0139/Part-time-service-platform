@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 @Slf4j
@@ -27,13 +29,12 @@ public class EmailController {
     private RedisUtils redisUtil;
 
     @PostMapping("/getEmailCode")
-    public Result GetCode(@RequestBody String email, HttpServletRequest request, HttpServletResponse response){
+    public Result GetCode(@RequestBody String email, HttpSession session){
         Map<String,Object> map= JSON.parseObject(email,Map.class);
         String mail= (String) map.get("email");
         String code= AuthCodeUtils.getUUID();
-        String key= AuthCodeUtils.getUUID();
-        redisUtil.set(key,code);
-        response.setHeader("emailSession",key);
+        redisUtil.set(email,code);
+        session.setAttribute("emailKey",code);
         String subject="大学生智能兼职管理平台";
         String content="<html lang=\"zh\">\n" +
                 "<head>\n" +
@@ -53,7 +54,7 @@ public class EmailController {
                 "</body>\n" +
                 "</html>\n";
         mailService.sendWithHtml(mail,subject,content);
-        redisUtil.expire(key,60*3);
+        redisUtil.expire(email,60*3);
         return ResponseUtils.successResult("发送成功");
     }
 }

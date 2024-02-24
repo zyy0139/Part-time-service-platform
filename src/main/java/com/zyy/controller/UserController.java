@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,18 +65,23 @@ public class UserController {
     }
 
     @PostMapping("/emailLogin")
-    public Result login(@RequestBody String body,HttpServletResponse response,HttpServletRequest request){
+    public Result login(@RequestBody String body, HttpServletResponse response, HttpSession session){
         if(body==null){
             return ResponseUtils.failResult("参数传入失败");
         }
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String email= String.valueOf(map.get("email")) ;
-        String code= String.valueOf(map.get("emailCode")) ;
-        String emailKey=request.getHeader("emailSession");
-        String value=redisUtil.get(emailKey).toString();
-        if (!value.equals(code)){
+        String code= String.valueOf(map.get("emailCode"));
+        Object emailKey=session.getAttribute("emailKey");
+        if(emailKey==null || !emailKey.toString().equals(code)){
             return ResponseUtils.failResult("验证码错误");
         }
+//        Object key=redisUtil.get(email);
+//        if (key==null || key.toString().equals(code)){
+//            return ResponseUtils.failResult("验证码错误");
+//        }else {
+//            redisUtil.del(email);
+//        }
         Users users=new Users();
         users.setEmail(email);
         Map map1=userService.token(users);
@@ -83,7 +89,7 @@ public class UserController {
             return ResponseUtils.failResult("邮箱输入错误");
         }
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
-        return ResponseUtils.successResult("登录成功");
+        return ResponseUtils.successResult("登录成功",map1.get("user"));
     }
 
     @PostMapping("/accountLogin")
@@ -103,15 +109,20 @@ public class UserController {
             return ResponseUtils.failResult("用户名或密码错误");
         }
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
-        return ResponseUtils.successResult("登陆成功");
+        return ResponseUtils.successResult("登陆成功",map1.get("user"));
     }
 
     @GetMapping("/getUserMessage")
-    public Result getUserMessage(HttpServletRequest request){
+    public Result getUserMessage(HttpServletRequest request,@RequestBody String body){
         String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
+//        Map<String,Object> map1=JSON.parseObject(body,Map.class);
+//        String userId= String.valueOf(map1.get("userId"));
         Users users=userService.SelectAllById(userId);
+        if(users==null){
+            return ResponseUtils.failResult("查询失败");
+        }
         Map<String,Object> map=new HashMap<>();
         map.put("userName",users.getName());
         map.put("userSex",users.getSex());
@@ -128,11 +139,12 @@ public class UserController {
         String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
-        int result=userService.UpdateAllById(users,userId);
+        users.setId(userId);
+        int result=userService.UpdateAllById(users);
         if(result==1){
             return ResponseUtils.successResult("修改成功");
         }else {
-            return ResponseUtils.failResult("保存失败");
+            return ResponseUtils.failResult("修改失败");
         }
     }
 }

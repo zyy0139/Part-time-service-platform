@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int UpdateAllById(Users users,String userId) {
-        int result=userMapper.updateAllById(users,userId);
+    public int UpdateAllById(Users users) {
+        int result=userMapper.updateAllById(users);
         return result;
     }
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface UserService {
     public int Regist(Users users);
-    public int UpdateAllById(Users users,String userId);
+    public int UpdateAllById(Users users);
     public Users SelectAllById(String id);
     public String SelectIdByEmail(String email);
     public String SelectIdByAccount(String account);
