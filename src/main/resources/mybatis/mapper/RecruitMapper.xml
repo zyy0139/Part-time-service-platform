@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zyy.dao.RecruitMapper">
     <resultMap id="BaseResultMap" type="com.zyy.entity.Recruits">
-        <id column="id" jdbcType="VARCHAR" property="id" />
+        <id column="recruitId" jdbcType="VARCHAR" property="recruitId" />
+        <result column="companyId" jdbcType="VARCHAR" property="companyId" />
         <result column="career" jdbcType="VARCHAR" property="career" />
         <result column="number" jdbcType="INTEGER" property="number" />
         <result column="message" jdbcType="VARCHAR" property="message" />
@@ -10,5 +11,14 @@
         <result column="freefl" jdbcType="TINYINT" property="freefl" />
         <result column="inform" jdbcType="VARCHAR" property="inform" />
     </resultMap>
+
+    <insert id="sendRecruit" parameterType="com.zyy.entity.Recruits">
+        insert into recruit(recruitId, companyid, career, number, message, salary, freefl, inform)
+                    value (#{recruitId},#{companyId},#{career},#{number},#{message},#{salary},#{freefl},#{inform})
+    </insert>
+    
+    <delete id="deleteByRecruitIdAndCompanyId" parameterType="string">
+        delete from recruit where recruitId=#{recruitId} and companyId=#{companyId}
+    </delete>
 
 </mapper>
