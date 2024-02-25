@@ -8,7 +8,8 @@ import lombok.Data;
 
 @Data
 public class Resumes {
-    private String id; //用户id
+    private String userId; //用户Id
+    private String companyId;//意向公司Id
     private String career; //意向职业
     private String experience; //个人经历
 }
