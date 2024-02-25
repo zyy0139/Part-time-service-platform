@@ -24,4 +24,13 @@
         select * from company where account=#{account} and password=#{password}
     </select>
 
+    <update id="updateById" parameterType="com.zyy.entity.Companies">
+        update company SET name=#{name},address=#{address},phone=#{phone}
+                        where id=#{id}
+    </update>
+
+    <select id="selectAllById" parameterType="string" resultMap="BaseResultMap">
+        select * from company where id=#{id}
+    </select>
+
 </mapper>

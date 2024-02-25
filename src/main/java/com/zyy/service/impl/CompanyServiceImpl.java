@@ -53,4 +53,16 @@ public class CompanyServiceImpl implements CompanyService {
         map.put("dxp",JWTUtils.getDxp(token));
         return map;
     }
+
+    @Override
+    public int updateById(Companies companies) {
+        int result=companyMapper.updateById(companies);
+        return result;
+    }
+
+    @Override
+    public Companies selectAllById(String id) {
+        Companies company=companyMapper.selectAllById(id);
+        return company;
+    }
 }

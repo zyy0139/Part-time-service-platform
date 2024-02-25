@@ -8,4 +8,6 @@ public interface CompanyService {
     public int companyRegister(Companies companies);
     public Companies selectAllByEmail(String email);
     public Map<String,Object> token(Companies companies);
+    public int updateById(Companies companies);
+    public Companies selectAllById(String id);
 }

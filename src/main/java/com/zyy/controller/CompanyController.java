@@ -1,6 +1,7 @@
 package com.zyy.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Companies;
 import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.utils.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -82,7 +84,7 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
-        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
 
@@ -102,7 +104,38 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
-        response.setHeader("Authorization",JWTUtils.USER_TOKEN+map1.get("token"));
+        response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
+
+    @PostMapping("/updateByCompanyId")
+    public Result updateByCompanyId(@RequestBody Companies companies,HttpServletRequest request){
+        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        companies.setId(companyId);
+        int result=companyService.updateById(companies);
+        if(result==1){
+            return ResponseUtils.successResult("修改成功");
+        }else {
+            return ResponseUtils.failResult("修改失败");
+        }
+    }
+
+    @PostMapping("/getCompanyMessage")
+    public Result getCompanyMessage(HttpServletRequest request){
+        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        Companies company=companyService.selectAllById(companyId);
+        if(company==null){
+            return ResponseUtils.failResult("查询失败");
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("companyName",company.getName());
+        map.put("companyAddress",company.getAddress());
+        map.put("companyPhone",company.getPhone());
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
 }
