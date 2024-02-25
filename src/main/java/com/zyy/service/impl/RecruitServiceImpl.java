@@ -4,7 +4,9 @@ import com.zyy.dao.RecruitMapper;
 import com.zyy.entity.Recruits;
 import com.zyy.service.RecruitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RecruitServiceImpl implements RecruitService {
 
     @Autowired
