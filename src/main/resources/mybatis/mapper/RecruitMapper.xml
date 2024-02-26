@@ -21,4 +21,21 @@
         delete from recruit where recruitId=#{recruitId} and companyId=#{companyId}
     </delete>
 
+    <update id="updateByRecruitIdAndCompanyId" parameterType="string">
+        update recruit SET career=#{career},number=#{number},message=#{message},salary=#{salary},#{freefl}=#{freefl},#{inform}=#{inform}
+                        where recruitId=#{recruitId} and companyId=#{companyId}
+    </update>
+
+    <select id="selectByRecruitIdAndCompanyId" resultMap="BaseResultMap">
+        select * from recruit where recruitId=#{recruitId} and companyId=#{companyId}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from recruit
+    </select>
+
+    <select id="selectRecruitNum" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from recruit
+    </select>
+
 </mapper>
