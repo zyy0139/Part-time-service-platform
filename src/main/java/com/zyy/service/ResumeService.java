@@ -1,8 +1,8 @@
-package com.zyy.dao;
+package com.zyy.service;
 
 import com.zyy.entity.Resumes;
 
-public interface ResumeMapper {
+public interface ResumeService {
     public int addResume(Resumes resumes);
     public int updateResume(Resumes resumes);
 }
