@@ -19,4 +19,8 @@
                 where userId=#{userId}
     </update>
 
+    <select id="getAllByUserId" parameterType="string" resultMap="BaseResultMap">
+        select * from resume where userId=#{userId}
+    </select>
+
 </mapper>

@@ -6,4 +6,13 @@
         <result column="companyId" jdbcType="VARCHAR" property="companyId" />
     </resultMap>
 
+
+    <select id="getUserIdByCompanyId" resultMap="BaseResultMap">
+        select userId from delivery where companyId=#{companyId}
+    </select>
+
+    <select id="getNumByCompanyId" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from delivery where companyId=#{companyId}
+    </select>
+
 </mapper>

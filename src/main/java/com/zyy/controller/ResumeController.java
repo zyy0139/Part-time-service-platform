@@ -2,7 +2,10 @@ package com.zyy.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Resumes;
+import com.zyy.service.impl.DeliveryServiceImpl;
 import com.zyy.service.impl.ResumeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,6 +26,9 @@ public class ResumeController {
 
     @Autowired
     private ResumeServiceImpl resumeService;
+
+    @Autowired
+    private DeliveryServiceImpl deliveryService;
 
     @PostMapping("/addResume")
     public Result addResume(@RequestBody String body, HttpServletRequest request){
@@ -60,4 +69,31 @@ public class ResumeController {
         }
     }
 
+    @GetMapping("/getResumeList")
+    public Result getResumeList(@RequestParam String page,@RequestParam String pageSize,HttpServletRequest request){
+        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        List<String> userIdList=deliveryService.getUserIdByCompanyId(companyId);
+        if(userIdList==null){
+            return ResponseUtils.failResult("暂无投递信息");
+        }
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        for (int i=0;i<=userIdList.size();i++){
+            Resumes resume=resumeService.getAllByUserId(userIdList.get(i));
+            Map<String,Object> map=new HashMap<>();
+            map.put("userId",resume.getUserId());
+            map.put("career",resume.getCareer());
+            map.put("skill",resume.getSkill());
+            map.put("experience",resume.getExperience());
+            mapList.add(map);
+        }
+        PageHelper.startPage(Integer.parseInt(page),Integer.parseInt(pageSize));
+        PageInfo<Map<String,Object>> resumeList=new PageInfo<>(mapList);
+        int total=deliveryService.getNumByCompanyId(companyId);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("resumeList",resumeList);
+        return ResponseUtils.successResult("查询成功",map1);
+    }
 }
