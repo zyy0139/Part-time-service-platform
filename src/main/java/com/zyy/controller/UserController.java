@@ -140,6 +140,8 @@ public class UserController {
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
         users.setId(userId);
+        boolean isAdmit=false;
+        users.setAdmit(isAdmit);
         int result=userService.UpdateAllById(users);
         if(result==1){
             return ResponseUtils.successResult("修改成功");

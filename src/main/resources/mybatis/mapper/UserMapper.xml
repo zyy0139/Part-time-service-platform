@@ -23,7 +23,7 @@
     
     <update id="updateAllById" parameterType="com.zyy.entity.Users">
         update user SET name=#{name},sex=#{sex},age=#{age},address=#{address},
-                        school=#{school},profession=#{profession},phone=#{phone}
+                        school=#{school},profession=#{profession},phone=#{phone},isAdmit=#{isAdmit}
                 where id=#{id}
     </update>
 
@@ -54,5 +54,9 @@
     <select id="selectAllByAccountAndPassword" parameterType="string" resultMap="BaseResultMapper">
         select * from user where account=#{account} and password=#{password}
     </select>
+
+    <update id="updateIsAdmitById" parameterType="com.zyy.entity.Users">
+        update user SET isAdmit=1 where id=#{userId}
+    </update>
 
 </mapper>
