@@ -15,4 +15,13 @@
         select count(*) from delivery where companyId=#{companyId}
     </select>
 
+    <insert id="addDelivery" parameterType="com.zyy.entity.Deliveries">
+        insert into delivery(userId, companyId)
+                value (#{userId},#{companyId})
+    </insert>
+
+    <delete id="deleteByUserIdAndCompanyId" parameterType="string">
+        delete from delivery where userId=#{userId} and companyId=#{companyId}
+    </delete>
+
 </mapper>
