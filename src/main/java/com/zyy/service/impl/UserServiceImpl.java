@@ -84,4 +84,10 @@ public class UserServiceImpl implements UserService {
         Users users=userMapper.selectAllByEmail(email);
         return users;
     }
+
+    @Override
+    public int updateIsAdmitByUserId(String userId) {
+        int result=userMapper.updateIsAdmitById(userId);
+        return result;
+    }
 }

@@ -12,4 +12,5 @@ public interface UserMapper {
     public Users selectAllByEmail(String email);
     public Users selectAllByEmailAndPassword(String email,String password);
     public Users selectAllByAccountAndPassword(String account,String password);
+    public int updateIsAdmitById(String userId);
 }

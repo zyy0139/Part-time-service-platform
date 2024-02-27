@@ -13,4 +13,5 @@ public interface UserService {
     public String SelectPasswordByAccount(String account);
     public Map<String,Object> token(Users users);
     public Users SelectAllByEmail(String email);
+    public int updateIsAdmitByUserId(String userId);
 }
