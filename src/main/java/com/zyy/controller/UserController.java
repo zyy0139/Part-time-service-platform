@@ -140,8 +140,7 @@ public class UserController {
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
         users.setId(userId);
-        boolean isAdmit=false;
-        users.setAdmit(isAdmit);
+        users.setIsAdmit(false);
         int result=userService.UpdateAllById(users);
         if(result==1){
             return ResponseUtils.successResult("修改成功");
@@ -149,4 +148,21 @@ public class UserController {
             return ResponseUtils.failResult("修改失败");
         }
     }
+
+    @GetMapping("/getAdmit")
+    public Result getAdmit(HttpServletRequest request){
+        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        if(token==null){
+            return ResponseUtils.failResult("无法解析到token");
+        }
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String userId=jwt.getSubject();
+        Users user=userService.SelectAllById(userId);
+        Boolean admit=user.getIsAdmit();
+        Map<String,Object> map=new HashMap<>();
+        map.put("userId",userId);
+        map.put("isAdmit",admit);
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
 }
