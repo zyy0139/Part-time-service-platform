@@ -5,6 +5,7 @@
         <id column="recruitId" jdbcType="VARCHAR" property="recruitId" />
         <result column="companyId" jdbcType="VARCHAR" property="companyId" />
         <result column="career" jdbcType="VARCHAR" property="career" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="number" jdbcType="INTEGER" property="number" />
         <result column="message" jdbcType="VARCHAR" property="message" />
         <result column="salary" jdbcType="INTEGER" property="salary" />
@@ -13,8 +14,8 @@
     </resultMap>
 
     <insert id="sendRecruit" parameterType="com.zyy.entity.Recruits">
-        insert into recruit(recruitId, companyid, career, number, message, salary, freefl, inform)
-                    value (#{recruitId},#{companyId},#{career},#{number},#{message},#{salary},#{freefl},#{inform})
+        insert into recruit(recruitId, companyid, career, type,number, message, salary, freefl, inform)
+                    value (#{recruitId},#{companyId},#{career},#{type},#{number},#{message},#{salary},#{freefl},#{inform})
     </insert>
     
     <delete id="deleteByRecruitIdAndCompanyId" parameterType="string">
@@ -22,7 +23,7 @@
     </delete>
 
     <update id="updateByRecruitIdAndCompanyId" parameterType="string">
-        update recruit SET career=#{career},number=#{number},message=#{message},salary=#{salary},#{freefl}=#{freefl},#{inform}=#{inform}
+        update recruit SET career=#{career},type=#{type},number=#{number},message=#{message},salary=#{salary},#{freefl}=#{freefl},#{inform}=#{inform}
                         where recruitId=#{recruitId} and companyId=#{companyId}
     </update>
 

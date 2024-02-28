@@ -11,6 +11,7 @@ public class Recruits {
     private String recruitId;//招聘信息Id
     private String companyId; //企业Id
     private String career; //招聘职业
+    private String type;//招聘岗位类型
     private int number; //招聘人数
     private String message; //招聘要求
     private int salary; //薪资

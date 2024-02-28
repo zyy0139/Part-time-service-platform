@@ -4,18 +4,19 @@
     <resultMap id="BaseResultMap" type="com.zyy.entity.Resumes">
         <id column="userId" jdbcType="VARCHAR" property="userId" />
         <result column="career" jdbcType="VARCHAR" property="career" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
         <result column="skill" jdbcType="VARCHAR" property="skill" />
         <result column="experience" jdbcType="VARCHAR"  property="experience" />
     </resultMap>
 
 
     <insert id="addResume" parameterType="com.zyy.entity.Resumes">
-        insert into resume(userId, career, skill, experience)
-                value (#{userId},#{career},#{skill},#{experience})
+        insert into resume(userId, career, type, skill, experience)
+                value (#{userId},#{career},#{type},#{skill},#{experience})
     </insert>
 
     <update id="updateResume" parameterType="com.zyy.entity.Resumes">
-        update resume set career=#{career},skill=#{skill},experience=#{experience}
+        update resume set career=#{career},type=#{type},skill=#{skill},experience=#{experience}
                 where userId=#{userId}
     </update>
 
