@@ -1,7 +1,7 @@
-package com.zyy.dao;
+package com.zyy.service;
 
 import java.util.List;
 
-public interface WorkTypeMapper {
+public interface WorkTypeService {
     public List<String> getType();
 }
