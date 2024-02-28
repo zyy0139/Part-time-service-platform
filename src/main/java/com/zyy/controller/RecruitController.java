@@ -39,6 +39,7 @@ public class RecruitController {
         recruit.setRecruitId(recruitId);
         recruit.setCompanyId(companyId);
         recruit.setCareer((String) map.get("career"));
+        recruit.setType((String) map.get("type"));
         recruit.setNumber((Integer) map.get("number"));
         recruit.setMessage((String)map.get("message"));
         recruit.setSalary((Integer) map.get("salary"));
@@ -78,6 +79,7 @@ public class RecruitController {
         recruit.setRecruitId(recruitId);
         recruit.setCompanyId(companyId);
         recruit.setCareer((String) map.get("career"));
+        recruit.setRecruitId((String) map.get("type"));
         recruit.setNumber((Integer) map.get("number"));
         recruit.setMessage((String) map.get("message"));
         recruit.setSalary((Integer) map.get("salary"));
@@ -99,6 +101,7 @@ public class RecruitController {
             return ResponseUtils.failResult("查询失败");
         }
         map.put("career",recruit.getCareer());
+        map.put("type",recruit.getType());
         map.put("number",recruit.getNumber());
         map.put("message",recruit.getMessage());
         map.put("salary",recruit.getSalary());
@@ -118,6 +121,7 @@ public class RecruitController {
         for(int i=0;i<=list.getSize();i++){
             Map<String,Object> map=new HashMap<>();
             map.put("career",recruitsList.get(i).getCareer());
+            map.put("type",recruitsList.get(i).getType());
             map.put("number",recruitsList.get(i).getNumber());
             map.put("message",recruitsList.get(i).getMessage());
             map.put("salary",recruitsList.get(i).getSalary());

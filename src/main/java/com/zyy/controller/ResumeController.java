@@ -42,6 +42,7 @@ public class ResumeController {
         Resumes resume=new Resumes();
         resume.setUserId(userId);
         resume.setCareer((String) map.get("career"));
+        resume.setType((String) map.get("type"));
         resume.setSkill((String) map.get("skill"));
         resume.setExperience((String) map.get("experience"));
         int result=resumeService.addResume(resume);
@@ -84,6 +85,7 @@ public class ResumeController {
             Map<String,Object> map=new HashMap<>();
             map.put("userId",resume.getUserId());
             map.put("career",resume.getCareer());
+            map.put("type",resume.getType());
             map.put("skill",resume.getSkill());
             map.put("experience",resume.getExperience());
             mapList.add(map);
