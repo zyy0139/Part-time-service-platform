@@ -53,4 +53,18 @@ public class RecruitServiceImpl implements RecruitService {
         int num=recruitMapper.selectRecruitNum();
         return num;
     }
+
+    @Override
+    public PageInfo<Recruits> selectAllBytype(String type, int page, int pageSize) {
+        PageHelper.startPage(page,pageSize);
+        List<Recruits> list=recruitMapper.selectAllByType(type);
+        PageInfo<Recruits> recruits=new PageInfo<>(list);
+        return recruits;
+    }
+
+    @Override
+    public int selectRecruitNumByType(String type) {
+        int num=recruitMapper.selectRecruitNumByType(type);
+        return num;
+    }
 }

@@ -136,4 +136,30 @@ public class RecruitController {
         return ResponseUtils.successResult("查询成功",map1);
     }
 
+    @GetMapping("/getMessageByType")
+    public Result getMessageByType(@RequestParam String type,@RequestParam String page,@RequestParam String pageSize){
+        PageInfo<Recruits> list=recruitService.selectAllBytype(type,Integer.parseInt(page),Integer.parseInt(pageSize));
+        if(list.getSize()==0){
+            return ResponseUtils.failResult("暂无该类型的招聘信息");
+        }
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        List<Recruits> recruitsList=list.getList();
+        for(int i=0;i<=list.getSize();i++){
+            Map<String,Object> map=new HashMap<>();
+            map.put("career",recruitsList.get(i).getCareer());
+            map.put("type",recruitsList.get(i).getType());
+            map.put("number",recruitsList.get(i).getNumber());
+            map.put("message",recruitsList.get(i).getMessage());
+            map.put("salary",recruitsList.get(i).getSalary());
+            map.put("freefl",recruitsList.get(i).isFreefl());
+            map.put("inform",recruitsList.get(i).getInform());
+            mapList.add(map);
+        }
+        int total=recruitService.selectRecruitNumByType(type);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("recruitList",mapList);
+        return ResponseUtils.successResult("查询成功",map1);
+    }
+
 }

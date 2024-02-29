@@ -39,4 +39,12 @@
         select count(*) from recruit
     </select>
 
+    <select id="selectAllByType" resultMap="BaseResultMap">
+        select * from recruit where type=#{type}
+    </select>
+
+    <select id="selectRecruitNumByType" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from recruit where type=#{type}
+    </select>
+
 </mapper>
