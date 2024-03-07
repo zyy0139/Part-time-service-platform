@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,25 +29,19 @@ public class CompanyController {
 
 
     @PostMapping("/register")
-    public Result companyRegister(@RequestBody String body, HttpServletRequest request){
+    public Result companyRegister(@RequestBody String body, HttpServletRequest request, HttpSession session){
         Map<String,Object> map= JSON.parseObject(body,Map.class);
         String email=String.valueOf(map.get("email"));
         Companies company=companyService.selectAllByEmail(email);
-        if(company==null){
+        if(company!=null){
             return ResponseUtils.failResult(ResultCode.USER_EXIST,"该邮箱已注册");
         }
         String emailCode=String.valueOf(map.get("emailCode"));
-        String emailKey=request.getHeader("emailSession");
-        String value= null;
-        try {
-            value = redisUtil.get(emailKey).toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object emailKey=redisUtil.get(email);
+        if(emailKey==null || !emailKey.toString().equals(emailCode)){
             return ResponseUtils.failResult("验证码错误");
-        }
-        redisUtil.del(emailKey);
-        if (!value.equals(emailCode)){
-            return ResponseUtils.failResult("验证码错误");
+        }else {
+            redisUtil.del(email);
         }
         Companies companies=new Companies();
         String id=RadomUtils.creatId();
@@ -73,10 +68,11 @@ public class CompanyController {
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String email= String.valueOf(map.get("email")) ;
         String code= String.valueOf(map.get("emailCode")) ;
-        String emailKey=request.getHeader("emailSession");
-        String value=redisUtil.get(emailKey).toString();
-        if (!value.equals(code)){
+        Object key=redisUtil.get(email);
+        if(key==null || !key.toString().equals(code)){
             return ResponseUtils.failResult("验证码错误");
+        }else {
+            redisUtil.del(email);
         }
         Companies companies=new Companies();
         companies.setEmail(email);

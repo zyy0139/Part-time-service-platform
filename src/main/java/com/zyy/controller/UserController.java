@@ -35,17 +35,11 @@ public class UserController {
             return ResponseUtils.failResult(ResultCode.USER_EXIST,"该邮箱已注册");
         }
         String emailCode=String.valueOf(map.get("emailCode"));
-        String emailKey=request.getHeader("emailSession");
-        String value;
-        try {
-            value = redisUtil.get(emailKey).toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+        Object emailKey=redisUtil.get(email);
+        if (emailKey==null || !emailKey.toString().equals(emailCode)){
             return ResponseUtils.failResult("验证码错误");
-        }
-        redisUtil.del(emailKey);
-        if (!value.equals(emailCode)){
-            return ResponseUtils.failResult("验证码错误");
+        }else {
+            redisUtil.del(email);
         }
         Users user=new Users();
         String id=RadomUtils.creatId();
@@ -65,23 +59,19 @@ public class UserController {
     }
 
     @PostMapping("/emailLogin")
-    public Result login(@RequestBody String body, HttpServletResponse response, HttpSession session){
+    public Result login(@RequestBody String body, HttpServletResponse response){
         if(body==null){
             return ResponseUtils.failResult("参数传入失败");
         }
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         String email= String.valueOf(map.get("email")) ;
         String code= String.valueOf(map.get("emailCode"));
-        Object emailKey=session.getAttribute("emailKey");
-        if(emailKey==null || !emailKey.toString().equals(code)){
+        Object key=redisUtil.get(email);
+        if (key==null || !key.toString().equals(code)){
             return ResponseUtils.failResult("验证码错误");
+        }else {
+            redisUtil.del(email);
         }
-//        Object key=redisUtil.get(email);
-//        if (key==null || key.toString().equals(code)){
-//            return ResponseUtils.failResult("验证码错误");
-//        }else {
-//            redisUtil.del(email);
-//        }
         Users users=new Users();
         users.setEmail(email);
         Map map1=userService.token(users);
@@ -117,8 +107,6 @@ public class UserController {
         String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
-//        Map<String,Object> map1=JSON.parseObject(body,Map.class);
-//        String userId= String.valueOf(map1.get("userId"));
         Users users=userService.SelectAllById(userId);
         if(users==null){
             return ResponseUtils.failResult("查询失败");
