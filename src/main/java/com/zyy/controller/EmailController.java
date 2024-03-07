@@ -29,9 +29,9 @@ public class EmailController {
     private RedisUtils redisUtil;
 
     @PostMapping("/getEmailCode")
-    public Result GetCode(@RequestBody String email, HttpSession session){
-        Map<String,Object> map= JSON.parseObject(email,Map.class);
-        String mail= (String) map.get("email");
+    public Result GetCode(@RequestBody String body, HttpSession session){
+        Map<String,Object> map= JSON.parseObject(body,Map.class);
+        String email= (String) map.get("email");
         String code= AuthCodeUtils.getUUID();
         redisUtil.set(email,code);
         session.setAttribute("emailKey",code);
@@ -53,7 +53,7 @@ public class EmailController {
                 "    <div id=\"sign\" style=\"font-size: 13px\">大学生智能兼职管理平台</div>\n" +
                 "</body>\n" +
                 "</html>\n";
-        mailService.sendWithHtml(mail,subject,content);
+        mailService.sendWithHtml(email,subject,content);
         redisUtil.expire(email,60*3);
         return ResponseUtils.successResult("发送成功");
     }
