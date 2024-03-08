@@ -48,9 +48,9 @@ public class ResumeController {
         resume.setExperience((String) map.get("experience"));
         int result=resumeService.addResume(resume);
         if(result==1){
-            return ResponseUtils.successResult("投递成功");
+            return ResponseUtils.successResult("添加成功");
         }else {
-            return ResponseUtils.failResult(ResultCode.add_fail,"投递失败");
+            return ResponseUtils.failResult(ResultCode.add_fail,"添加失败");
         }
     }
 
