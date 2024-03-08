@@ -10,6 +10,7 @@ public interface RecruitService {
     public Recruits selectByRecruitIdAndCompanyId(String recruitId,String companyId);
     public PageInfo<Recruits> selectAll(int page,int pageSize);
     public int selectRecruitNum();
+    public int getNumber(String recruitId);
     public int updateNumber(String recruitId,int num);
     public PageInfo<Recruits> selectAllBytype(String type,int page,int pageSize);
     public int selectRecruitNumByType(String type);

@@ -55,6 +55,12 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
+    public int getNumber(String recruitId) {
+        int number=recruitMapper.getNumber(recruitId);
+        return number;
+    }
+
+    @Override
     public int updateNumber(String recruitId, int num) {
         int result=recruitMapper.updateNumber(recruitId,num);
         return result;

@@ -51,4 +51,8 @@
         update recruit SET number=#{number} where recruitId=#{recruitId}
     </update>
 
+    <select id="getNumber" parameterType="string" resultType="java.lang.Integer">
+        select number from recruit where recruitId=#{recruitId}
+    </select>
+
 </mapper>

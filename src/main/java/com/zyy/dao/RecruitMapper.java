@@ -12,6 +12,7 @@ public interface RecruitMapper {
     public List<Recruits> selectAll();
     public int selectRecruitNum();
     public int updateNumber(String recruitId,int num);
+    public int getNumber(String recruitId);
     public List<Recruits> selectAllByType(String type);
     public int selectRecruitNumByType(String type);
 }
