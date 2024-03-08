@@ -47,4 +47,8 @@
         select count(*) from recruit where type=#{type}
     </select>
 
+    <update id="updateNumber" parameterType="string">
+        update recruit SET number=#{number} where recruitId=#{recruitId}
+    </update>
+
 </mapper>

@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Resumes;
 import com.zyy.service.impl.DeliveryServiceImpl;
+import com.zyy.service.impl.RecruitServiceImpl;
 import com.zyy.service.impl.ResumeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +48,9 @@ public class ResumeController {
         resume.setExperience((String) map.get("experience"));
         int result=resumeService.addResume(resume);
         if(result==1){
-            return ResponseUtils.successResult("添加成功");
+            return ResponseUtils.successResult("投递成功");
         }else {
-            return ResponseUtils.failResult(ResultCode.add_fail,"添加失败");
+            return ResponseUtils.failResult(ResultCode.add_fail,"投递失败");
         }
     }
 

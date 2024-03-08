@@ -55,6 +55,12 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
+    public int updateNumber(String recruitId, int num) {
+        int result=recruitMapper.updateNumber(recruitId,num);
+        return result;
+    }
+
+    @Override
     public PageInfo<Recruits> selectAllBytype(String type, int page, int pageSize) {
         PageHelper.startPage(page,pageSize);
         List<Recruits> list=recruitMapper.selectAllByType(type);
