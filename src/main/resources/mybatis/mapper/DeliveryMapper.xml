@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.zyy.entity.Deliveries">
         <id column="userId" jdbcType="VARCHAR" property="userId" />
         <result column="companyId" jdbcType="VARCHAR" property="companyId" />
+        <result column="recruitId" jdbcType="VARCHAR" property="recruitId" />
     </resultMap>
 
 
@@ -16,8 +17,8 @@
     </select>
 
     <insert id="addDelivery" parameterType="com.zyy.entity.Deliveries">
-        insert into delivery(userId, companyId)
-                value (#{userId},#{companyId})
+        insert into delivery(userId, companyId, recruitId)
+                value (#{userId},#{companyId},#{recruitId})
     </insert>
 
     <delete id="deleteByUserIdAndCompanyId" parameterType="string">

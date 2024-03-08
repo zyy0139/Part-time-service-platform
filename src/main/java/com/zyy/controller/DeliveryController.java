@@ -24,7 +24,7 @@ public class DeliveryController {
     private UserServiceImpl userService;
 
     @PostMapping("/addDelivery")
-    public Result addDelivery(@RequestParam String companyId, HttpServletRequest request){
+    public Result addDelivery(@RequestParam String recruitId,@RequestParam String companyId, HttpServletRequest request){
         String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         if(token==null){
             return ResponseUtils.failResult("无法解析到token");
@@ -34,6 +34,7 @@ public class DeliveryController {
         Deliveries delivery=new Deliveries();
         delivery.setUserId(userId);
         delivery.setCompanyId(companyId);
+        delivery.setRecruitId(recruitId);
         int result=deliveryService.addDelivery(delivery);
         if(result==1){
             return ResponseUtils.successResult("投递成功");
