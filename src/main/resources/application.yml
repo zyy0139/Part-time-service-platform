@@ -6,8 +6,6 @@ spring:
     url: jdbc:mysql://localhost:3306/bishe?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&serverTimezone=UTC&tinyInt1isBit=false
   mvc:
     dispatch-options-request: true
-  application:
-    name: springboot-redisson
   redis:
     database: 0
     host: 127.0.0.1
@@ -20,7 +18,7 @@ spring:
         max-idle: 10
         max-wait: 100000
     redisson:
-      file: classpath:redisson.yaml
+      file: classpath:redisson.yml
 
 
 
