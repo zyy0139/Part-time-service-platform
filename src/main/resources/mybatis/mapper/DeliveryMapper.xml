@@ -25,4 +25,8 @@
         delete from delivery where userId=#{userId} and companyId=#{companyId}
     </delete>
 
+    <select id="getRecruitId" parameterType="string" resultMap="BaseResultMap">
+        select recruitId from delivery where userId=#{userId} and companyId=#{companyId}
+    </select>
+
 </mapper>

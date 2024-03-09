@@ -9,4 +9,5 @@ public interface DeliveryMapper {
     public int getNumByCompanyId(String companyId);
     public int addDelivery(Deliveries deliveries);
     public int deleteByUserIdAndCompanyId(String userId,String companyId);
+    public String getRecruitId(String userId,String companyId);
 }

@@ -37,4 +37,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         int result=deliveryMapper.deleteByUserIdAndCompanyId(userId,companyId);
         return result;
     }
+
+    @Override
+    public String getRecruitId(String userId, String companyId) {
+        String recruitId=deliveryMapper.getRecruitId(userId,companyId);
+        return recruitId;
+    }
 }
