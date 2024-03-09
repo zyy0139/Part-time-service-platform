@@ -3,8 +3,11 @@ package com.zyy.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Deliveries;
 import com.zyy.service.impl.DeliveryServiceImpl;
+import com.zyy.service.impl.RecruitServiceImpl;
 import com.zyy.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
@@ -23,6 +26,12 @@ public class DeliveryController {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private RecruitServiceImpl recruitService;
+
+    @Autowired
+    private Redisson redisson;
+
     @PostMapping("/addDelivery")
     public Result addDelivery(@RequestParam String recruitId,@RequestParam String companyId, HttpServletRequest request){
         String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
@@ -35,11 +44,21 @@ public class DeliveryController {
         delivery.setUserId(userId);
         delivery.setCompanyId(companyId);
         delivery.setRecruitId(recruitId);
-        int result=deliveryService.addDelivery(delivery);
-        if(result==1){
-            return ResponseUtils.successResult("投递成功");
-        }else {
-            return ResponseUtils.failResult(ResultCode.add_fail,"投递失败");
+        //防并发处理
+        RLock redissonLock=redisson.getLock(userId);
+        redissonLock.lock();
+        try {
+            int result1=deliveryService.addDelivery(delivery);
+            int number=recruitService.getNumber(recruitId);
+            number-=1;
+            int result2=recruitService.updateNumber(recruitId,number);
+            if(result1==1 && result2==1){
+                return ResponseUtils.successResult("投递成功");
+            }else {
+                return ResponseUtils.failResult("投递失败");
+            }
+        }finally {
+            redissonLock.unlock();
         }
     }
 
@@ -51,8 +70,12 @@ public class DeliveryController {
         }
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
-        int result=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
-        if(result==1){
+        String recruitId=deliveryService.getRecruitId(userId,companyId);
+        int number=recruitService.getNumber(recruitId);
+        number+=1;
+        int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
+        int result2=recruitService.updateNumber(recruitId,number);
+        if(result1==1 && result2==1){
             return ResponseUtils.successResult("驳回成功");
         }else {
             return ResponseUtils.failResult(ResultCode.delete_fail,"驳回失败");
