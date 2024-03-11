@@ -45,7 +45,7 @@ public class DeliveryController {
         delivery.setCompanyId(companyId);
         delivery.setRecruitId(recruitId);
         //防并发处理
-        RLock redissonLock=redisson.getLock(userId);
+        RLock redissonLock=redisson.getLock(recruitId);
         redissonLock.lock();
         try {
             int result1=deliveryService.addDelivery(delivery);
