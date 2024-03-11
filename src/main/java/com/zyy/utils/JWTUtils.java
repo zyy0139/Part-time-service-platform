@@ -45,7 +45,7 @@ public class JWTUtils {
 
     public void setExpireTime(int expireTimeInt) {
 
-        JWTUtils.expireTime = expireTimeInt*1000L*60;
+        JWTUtils.expireTime = expireTimeInt * 60 * 1000;
 
     }
 
@@ -55,10 +55,12 @@ public class JWTUtils {
      * @return
      */
     public static String createToken(String sub){
+        Algorithm algorithm=Algorithm.HMAC256(secret);
+        Date date=new Date(System.currentTimeMillis() + expireTime);
         return tokenPrefix + JWT.create()
                 .withSubject(sub)
-                .withExpiresAt(new Date(System.currentTimeMillis() + expireTime))
-                .sign(Algorithm.HMAC512(secret));
+                .withExpiresAt(date)
+                .sign(algorithm);
     }
     /**
      * 验证token
@@ -66,7 +68,7 @@ public class JWTUtils {
      */
     public static String validateToken(String token) throws Exception {
         try {
-            return JWT.require(Algorithm.HMAC512(secret))
+            return JWT.require(Algorithm.HMAC256(secret))
                     .build()
                     .verify(token.replace(tokenPrefix, ""))
                     .getSubject();
@@ -80,7 +82,7 @@ public class JWTUtils {
     }
 
     public static DecodedJWT verify(String token){
-        return JWT.require(Algorithm.HMAC512(secret)).build().verify(token);
+        return JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
     }
     /**
      * 检查token是否需要更新
@@ -106,7 +108,7 @@ public class JWTUtils {
 
     public static Date getDxp(String token){
 
-        Date expiresAt = JWT.require(Algorithm.HMAC512(secret))
+        Date expiresAt = JWT.require(Algorithm.HMAC256(secret))
                 .build()
                 .verify(token.replace(tokenPrefix, ""))
                 .getExpiresAt();

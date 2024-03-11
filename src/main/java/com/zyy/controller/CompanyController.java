@@ -80,7 +80,7 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
-        response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
+        response.setHeader("Authorization",(String) map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
 
@@ -100,13 +100,14 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
-        response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
+        response.setHeader("Authorization",(String) map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
 
     @PostMapping("/updateByCompanyId")
     public Result updateByCompanyId(@RequestBody Companies companies,HttpServletRequest request){
-        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        String header= request.getHeader("Authorization");
+        String token=header.substring(7);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         companies.setId(companyId);
@@ -120,7 +121,8 @@ public class CompanyController {
 
     @PostMapping("/getCompanyMessage")
     public Result getCompanyMessage(HttpServletRequest request){
-        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        String header= request.getHeader("Authorization");
+        String token=header.substring(7);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         Companies company=companyService.selectAllById(companyId);
