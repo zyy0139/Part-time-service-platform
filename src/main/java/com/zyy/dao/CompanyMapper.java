@@ -8,4 +8,5 @@ public interface CompanyMapper {
     public Companies selectAllByAccountAndPassword(String account,String password);
     public int updateById(Companies companies);
     public Companies selectAllById(String id);
+    public String getIdByName(String name);
 }

@@ -55,4 +55,12 @@
         select number from recruit where recruitId=#{recruitId}
     </select>
 
+    <select id="selectAllByCompanyId" resultMap="BaseResultMap">
+        select * from recruit where companyid=#{companyId}
+    </select>
+
+    <select id="selectNumByCompanyId" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from recruit where companyid=#{companyId}
+    </select>
+
 </mapper>

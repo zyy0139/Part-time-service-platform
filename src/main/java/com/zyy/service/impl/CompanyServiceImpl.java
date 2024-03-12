@@ -65,4 +65,10 @@ public class CompanyServiceImpl implements CompanyService {
         Companies company=companyMapper.selectAllById(id);
         return company;
     }
+
+    @Override
+    public String getIdByName(String name) {
+        String companyId=companyMapper.getIdByName(name);
+        return companyId;
+    }
 }

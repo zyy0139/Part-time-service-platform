@@ -15,4 +15,6 @@ public interface RecruitMapper {
     public int getNumber(String recruitId);
     public List<Recruits> selectAllByType(String type);
     public int selectRecruitNumByType(String type);
+    public List<Recruits> selectAllByCompanyId(String companyId);
+    public int selectNumByCompanyId(String companyId);
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Recruits;
+import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.service.impl.RecruitServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RecruitController {
 
     @Autowired
     private RecruitServiceImpl recruitService;
+
+    @Autowired
+    private CompanyServiceImpl companyService;
 
     @PostMapping("/sendRecruit")
     public Result sendRecruit(@RequestBody String body, HttpServletRequest request){
@@ -156,6 +160,33 @@ public class RecruitController {
             mapList.add(map);
         }
         int total=recruitService.selectRecruitNumByType(type);
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("recruitList",mapList);
+        return ResponseUtils.successResult("查询成功",map1);
+    }
+
+    @GetMapping("/getByCompanyName")
+    public Result getByCompanyName(@RequestParam String companyName,@RequestParam String page,@RequestParam String pageSize){
+        String companyId=companyService.getIdByName(companyName);
+        PageInfo<Recruits> list=recruitService.selectAllByCompanyId(companyId,Integer.parseInt(page),Integer.parseInt(pageSize));
+        if(list.getSize()==0){
+            return ResponseUtils.failResult("暂无该公司的招聘信息");
+        }
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        List<Recruits> recruitsList=list.getList();
+        for(int i=0;i<=list.getSize();i++){
+            Map<String,Object> map=new HashMap<>();
+            map.put("career",recruitsList.get(i).getCareer());
+            map.put("type",recruitsList.get(i).getType());
+            map.put("number",recruitsList.get(i).getNumber());
+            map.put("message",recruitsList.get(i).getMessage());
+            map.put("salary",recruitsList.get(i).getSalary());
+            map.put("freefl",recruitsList.get(i).isFreefl());
+            map.put("inform",recruitsList.get(i).getInform());
+            mapList.add(map);
+        }
+        int total=recruitService.getNumByCompanyId(companyId);
         Map<String,Object> map1=new HashMap<>();
         map1.put("total",total);
         map1.put("recruitList",mapList);

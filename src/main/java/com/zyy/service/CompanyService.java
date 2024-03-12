@@ -10,4 +10,5 @@ public interface CompanyService {
     public Map<String,Object> token(Companies companies);
     public int updateById(Companies companies);
     public Companies selectAllById(String id);
+    public String getIdByName(String name);
 }
