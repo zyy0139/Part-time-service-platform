@@ -136,4 +136,31 @@ public class CompanyController {
         return ResponseUtils.successResult("查询成功",map);
     }
 
+    @PostMapping("/updatePassword")
+    public Result updatePassword(@RequestBody String body,HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        if(header==null){
+            return ResponseUtils.failResult("未检测到token");
+        }
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        Map<String,Object> map=JSON.parseObject(body,Map.class);
+        String oldPassword=String.valueOf(map.get("oldPassword"));
+        String newPassword=String.valueOf(map.get("newPassword"));
+        String md5_oldPassword=MD5Utils.getMD5(oldPassword);
+        Companies company=companyService.selectAllById(companyId);
+        if(!company.getPassword().equals(md5_oldPassword)){
+            return ResponseUtils.failResult("旧密码错误");
+        }
+        String md5_newPassword=MD5Utils.getMD5(newPassword);
+        int result=companyService.updatePasswordById(companyId,md5_newPassword);
+        if(result==1){
+            return ResponseUtils.successResult("修改成功");
+        }else {
+            return ResponseUtils.failResult("修改失败");
+        }
+
+    }
+
 }

@@ -29,6 +29,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int UpdatePasswordById(String id, String password) {
+        int result=userMapper.updatePasswordById(id,password);
+        return result;
+    }
+
+    @Override
     public Users SelectAllById(String id) {
         Users users=userMapper.selectAllById(id);
         return users;

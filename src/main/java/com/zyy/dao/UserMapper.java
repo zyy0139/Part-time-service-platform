@@ -5,6 +5,7 @@ import com.zyy.entity.Users;
 public interface UserMapper {
     public int userRegister(Users users);
     public int updateAllById(Users user);
+    public int updatePasswordById(String id,String password);
     public Users selectAllById(String id);
     public String selectIdByEmail(String email);
     public String selectIdByAccount(String account);

@@ -61,9 +61,21 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public int updatePasswordById(String password, String id) {
+        int result=companyMapper.updatePasswordById(password,id);
+        return result;
+    }
+
+    @Override
     public Companies selectAllById(String id) {
         Companies company=companyMapper.selectAllById(id);
         return company;
+    }
+
+    @Override
+    public String selectIdByEmail(String email) {
+        String companyId=companyMapper.selectIdByEmail(email);
+        return companyId;
     }
 
     @Override

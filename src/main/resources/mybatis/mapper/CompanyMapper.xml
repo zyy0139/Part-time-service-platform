@@ -29,8 +29,17 @@
                         where id=#{id}
     </update>
 
+    <update id="updatePasswordById" parameterType="com.zyy.entity.Companies">
+        update company SET password=#{password}
+                        where id=#{id}
+    </update>
+
     <select id="selectAllById" parameterType="string" resultMap="BaseResultMap">
         select * from company where id=#{id}
+    </select>
+
+    <select id="selectIdByEmail" parameterType="string" resultType="string">
+        select id from company where email=#{email}
     </select>
 
     <select id="getIdByName" parameterType="string" resultMap="BaseResultMap">

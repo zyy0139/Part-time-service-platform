@@ -27,6 +27,10 @@
                 where id=#{id}
     </update>
 
+    <update id="updatePasswordById" parameterType="com.zyy.entity.Users">
+        update user SET password=#{password} where id=#{id}
+    </update>
+
     <select id="selectAllById" parameterType="string" resultMap="BaseResultMapper">
         select * from user where id=#{id}
     </select>

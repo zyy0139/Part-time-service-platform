@@ -7,6 +7,7 @@ import java.util.Map;
 public interface UserService {
     public int Regist(Users users);
     public int UpdateAllById(Users users);
+    public int UpdatePasswordById(String id, String password);
     public Users SelectAllById(String id);
     public String SelectIdByEmail(String email);
     public String SelectIdByAccount(String account);

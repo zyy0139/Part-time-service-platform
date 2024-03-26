@@ -9,6 +9,8 @@ public interface CompanyService {
     public Companies selectAllByEmail(String email);
     public Map<String,Object> token(Companies companies);
     public int updateById(Companies companies);
+    public int updatePasswordById(String password,String id);
     public Companies selectAllById(String id);
+    public String selectIdByEmail(String email);
     public String getIdByName(String name);
 }
