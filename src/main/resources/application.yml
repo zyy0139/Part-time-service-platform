@@ -25,10 +25,15 @@ spring:
   mail:
     host: smtp.qq.com
     username: 1443802862@qq.com
-    password: osvrzlboyoingcid
+    password: gaconunhsgiyghia
     default-encoding: utf-8
-    properties.mail.smtp.auth: true
-    properties.mail.smtp.starttls.enable: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
