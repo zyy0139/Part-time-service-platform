@@ -113,6 +113,8 @@ public class UserController {
         Users users = userService.SelectAllById(userId);
         if (users == null) {
             return ResponseUtils.failResult("查询失败");
+        }else if(users.getName()==null || users.getSex()==null || users.getAge()==null || users.getAddress()==null || users.getSchool()==null || users.getProfession()==null || users.getPhone()==null){
+            return ResponseUtils.failResult(ResultCode.select_fail, "用户信息未完善");
         }
         Map<String, Object> map = new HashMap<>();
         map.put("userName", users.getName());
