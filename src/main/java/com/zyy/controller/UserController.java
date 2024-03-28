@@ -158,8 +158,8 @@ public class UserController {
         return ResponseUtils.successResult("查询成功", map);
     }
 
-    @GetMapping("/getAccount")
-    public Result getAccount(HttpServletRequest request) {
+    @GetMapping("/getName")
+    public Result getName(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         if (header == null) {
             return ResponseUtils.failResult("无法解析到token");
@@ -169,9 +169,11 @@ public class UserController {
         String userId = jwt.getSubject();
         Users user = userService.SelectAllById(userId);
         String account = user.getAccount();
+        String userName = user.getName();
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         map.put("account", account);
+        map.put("userName", userName);
         return ResponseUtils.successResult("查询成功", map);
     }
 

@@ -9,7 +9,7 @@ public interface UserMapper {
     public Users selectAllById(String id);
     public String selectIdByEmail(String email);
     public String selectIdByAccount(String account);
-    public String selectPasswordByAccount(String acount);
+    public String selectPasswordByAccount(String account);
     public Users selectAllByEmail(String email);
     public Users selectAllByEmailAndPassword(String email,String password);
     public Users selectAllByAccountAndPassword(String account,String password);
