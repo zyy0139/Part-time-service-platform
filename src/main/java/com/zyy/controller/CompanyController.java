@@ -80,6 +80,7 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
@@ -100,6 +101,7 @@ public class CompanyController {
         if(map1.get("code").equals("0")){
             return ResponseUtils.failResult("邮箱输入错误");
         }
+        response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
         return ResponseUtils.successResult("登录成功");
     }
