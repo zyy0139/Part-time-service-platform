@@ -73,7 +73,8 @@ public class ResumeController {
 
     @GetMapping("/getResumeList")
     public Result getResumeList(@RequestParam String page,@RequestParam String pageSize,HttpServletRequest request){
-        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        String header = request.getHeader("Authorization");
+        String token = header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         List<String> userIdList=deliveryService.getUserIdByCompanyId(companyId);
@@ -99,4 +100,24 @@ public class ResumeController {
         map1.put("resumeList",resumeList);
         return ResponseUtils.successResult("查询成功",map1);
     }
+
+    @GetMapping("/getResume")
+    public Result getResume(HttpServletRequest request){
+        String header = request.getHeader("Authorization");
+        String token = header.substring(18);
+        DecodedJWT jwt = JWTUtils.verify(token);
+        String userId = jwt.getSubject();
+        Resumes resume = resumeService.getAllByUserId(userId);
+        if(resume==null){
+            return ResponseUtils.failResult("暂无简历信息");
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("userId",resume.getUserId());
+        map.put("career",resume.getCareer());
+        map.put("type",resume.getType());
+        map.put("skill",resume.getSkill());
+        map.put("experience",resume.getExperience());
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
 }
