@@ -42,7 +42,7 @@
         select id from company where email=#{email}
     </select>
 
-    <select id="getIdByName" parameterType="string" resultMap="BaseResultMap">
+    <select id="getIdByName" parameterType="string" resultType="string">
         select id from company where name=#{name}
     </select>
 

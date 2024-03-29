@@ -36,15 +36,15 @@
         select * from user where id=#{id}
     </select>
 
-    <select id="selectIdByEmail" parameterType="string" resultMap="BaseResultMapper">
+    <select id="selectIdByEmail" parameterType="string" resultType="string">
         select id from user where email=#{email}
     </select>
 
-    <select id="selectIdByAccount" parameterType="string" resultMap="BaseResultMapper">
+    <select id="selectIdByAccount" parameterType="string" resultType="string">
         select id from user where account=#{account}
     </select>
 
-    <select id="selectPasswordByAccount" parameterType="string" resultMap="BaseResultMapper">
+    <select id="selectPasswordByAccount" parameterType="string" resultType="string">
         select password from user where account=#{account}
     </select>
 
