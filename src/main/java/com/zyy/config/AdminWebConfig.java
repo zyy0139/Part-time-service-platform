@@ -25,7 +25,8 @@ public class AdminWebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")//所有请求都被拦截包括静态资源
                 .excludePathPatterns("/zyy/email/getEmailCode")
                 .excludePathPatterns("/zyy/user/accountLogin").excludePathPatterns("/zyy/user/register").excludePathPatterns("/zyy/user/emailLogin")
-                .excludePathPatterns("/zyy/company/accountLogin").excludePathPatterns("/zyy/company/emailLogin").excludePathPatterns("/zyy/company/register");//放行的请求
+                .excludePathPatterns("/zyy/company/accountLogin").excludePathPatterns("/zyy/company/emailLogin").excludePathPatterns("/zyy/company/register")
+                .excludePathPatterns("/zyy/password/resetPassword");//放行的请求
     }
 
 }
