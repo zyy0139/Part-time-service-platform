@@ -117,6 +117,8 @@ public class UserController {
             return ResponseUtils.failResult(ResultCode.select_fail, "用户信息未完善");
         }
         Map<String, Object> map = new HashMap<>();
+        map.put("userId",userId);
+        map.put("userEmail",users.getEmail());
         map.put("userName", users.getName());
         map.put("userSex", users.getSex());
         map.put("userAge", users.getAge());
