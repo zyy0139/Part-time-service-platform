@@ -2,6 +2,8 @@ package com.zyy.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /*
     企业招聘信息类
  */
@@ -17,4 +19,5 @@ public class Recruits {
     private int salary; //薪资
     private boolean freefl; //是否包吃住
     private String inform; //联系方式
+    private Date releaseDate; //发布时间
 }

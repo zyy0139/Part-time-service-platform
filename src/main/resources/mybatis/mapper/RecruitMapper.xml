@@ -11,19 +11,20 @@
         <result column="salary" jdbcType="INTEGER" property="salary" />
         <result column="freefl" jdbcType="TINYINT" property="freefl" />
         <result column="inform" jdbcType="VARCHAR" property="inform" />
+        <result column="releaseDate" jdbcType="DATE" javaType="java.util.Date" property="releaseDate" />
     </resultMap>
 
     <insert id="sendRecruit" parameterType="com.zyy.entity.Recruits">
-        insert into recruit(recruitId, companyid, career, type,number, message, salary, freefl, inform)
-                    value (#{recruitId},#{companyId},#{career},#{type},#{number},#{message},#{salary},#{freefl},#{inform})
+        insert into recruit(recruitId, companyid, career, type,number, message, salary, freefl, inform,releaseDate)
+                    value (#{recruitId},#{companyId},#{career},#{type},#{number},#{message},#{salary},#{freefl},#{inform},#{releaseDate})
     </insert>
     
     <delete id="deleteByRecruitIdAndCompanyId" parameterType="string">
         delete from recruit where recruitId=#{recruitId} and companyId=#{companyId}
     </delete>
 
-    <update id="updateByRecruitIdAndCompanyId" parameterType="string">
-        update recruit SET career=#{career},type=#{type},number=#{number},message=#{message},salary=#{salary},#{freefl}=#{freefl},#{inform}=#{inform}
+    <update id="updateByRecruitIdAndCompanyId" parameterType="com.zyy.entity.Recruits">
+        update recruit SET career=#{career},type=#{type},number=#{number},message=#{message},salary=#{salary},freefl=#{freefl},inform=#{inform},releaseDate=#{releaseDate}
                         where recruitId=#{recruitId} and companyId=#{companyId}
     </update>
 

@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -40,6 +39,7 @@ public class RecruitController {
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         String recruitId=RadomUtils.creatId();
+        Date releaseDate=DateUtils.getNow();
         recruit.setRecruitId(recruitId);
         recruit.setCompanyId(companyId);
         recruit.setCareer((String) map.get("career"));
@@ -49,6 +49,7 @@ public class RecruitController {
         recruit.setSalary((Integer) map.get("salary"));
         recruit.setFreefl((Boolean) map.get("freefl"));
         recruit.setInform((String) map.get("inform"));
+        recruit.setReleaseDate(releaseDate);
         int result=recruitService.sendRecruit(recruit);
         if(result==1){
             return ResponseUtils.successResult("发布成功");
@@ -62,7 +63,8 @@ public class RecruitController {
         if(recruitId==null){
             return ResponseUtils.failResult("参数传入失败");
         }
-        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         int result=recruitService.deleteByRecruitIdAndCompanyId(recruitId,companyId);
@@ -75,20 +77,23 @@ public class RecruitController {
 
     @PostMapping("/updateRecruit")
     public Result updateRecruit(@RequestParam String recruitId,@RequestBody String body,HttpServletRequest request){
-        String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         Map<String,Object> map=JSON.parseObject(body,Map.class);
+        Date releaseDate=DateUtils.getNow();
         Recruits recruit=new Recruits();
         recruit.setRecruitId(recruitId);
         recruit.setCompanyId(companyId);
         recruit.setCareer((String) map.get("career"));
-        recruit.setRecruitId((String) map.get("type"));
+        recruit.setType((String) map.get("type"));
         recruit.setNumber((Integer) map.get("number"));
         recruit.setMessage((String) map.get("message"));
         recruit.setSalary((Integer) map.get("salary"));
         recruit.setFreefl((Boolean) map.get("freefl"));
         recruit.setInform((String) map.get("inform"));
+        recruit.setReleaseDate(releaseDate);
         int result=recruitService.updateByRecruitIdAndCompanyId(recruit);
         if(result==1){
             return ResponseUtils.successResult("修改成功");
