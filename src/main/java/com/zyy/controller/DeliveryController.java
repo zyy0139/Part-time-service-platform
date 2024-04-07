@@ -2,6 +2,7 @@ package com.zyy.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Deliveries;
+import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.service.impl.DeliveryServiceImpl;
 import com.zyy.service.impl.RecruitServiceImpl;
 import com.zyy.service.impl.UserServiceImpl;
@@ -30,16 +31,20 @@ public class DeliveryController {
     private RecruitServiceImpl recruitService;
 
     @Autowired
+    private CompanyServiceImpl companyService;
+
+    @Autowired
     private Redisson redisson;
 
     @PostMapping("/addDelivery")
-    public Result addDelivery(@RequestParam String recruitId,@RequestParam String companyId, HttpServletRequest request){
+    public Result addDelivery(@RequestParam String recruitId,@RequestParam String companyName, HttpServletRequest request){
         String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         if(token==null){
             return ResponseUtils.failResult("无法解析到token");
         }
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
+        String companyId=companyService.getIdByName(companyName);
         Deliveries delivery=new Deliveries();
         delivery.setUserId(userId);
         delivery.setCompanyId(companyId);
@@ -48,11 +53,8 @@ public class DeliveryController {
         RLock redissonLock=redisson.getLock(recruitId);
         redissonLock.lock();
         try {
-            int result1=deliveryService.addDelivery(delivery);
-            int number=recruitService.getNumber(recruitId);
-            number-=1;
-            int result2=recruitService.updateNumber(recruitId,number);
-            if(result1==1 && result2==1){
+            int result=deliveryService.addDelivery(delivery);
+            if(result==1){
                 return ResponseUtils.successResult("投递成功");
             }else {
                 return ResponseUtils.failResult("投递失败");
@@ -83,16 +85,19 @@ public class DeliveryController {
     }
 
     @DeleteMapping("/admitDelivery")
-    public Result admitDelivery(@RequestParam String userId,HttpServletRequest request){
+    public Result admitDelivery(@RequestParam String userId,@RequestParam String recruitId,HttpServletRequest request){
         String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         if(token==null){
             return ResponseUtils.failResult("无法解析到token");
         }
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
+        int number=recruitService.getNumber(recruitId);
         int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
         int result2=userService.updateIsAdmitByUserId(userId);
-        if(result1==1 && result2==1){
+        number-=1;
+        int result3=recruitService.updateNumber(recruitId,number);
+        if(result1==1 && result2==1 && result3==1){
             return ResponseUtils.successResult("录用成功");
         }else if (result1!=1){
             return ResponseUtils.failResult(ResultCode.delete_fail,"删除信息失败");
