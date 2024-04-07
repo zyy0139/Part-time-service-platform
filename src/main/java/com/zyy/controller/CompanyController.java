@@ -103,7 +103,7 @@ public class CompanyController {
         }
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Authorization",JWTUtils.USER_TOKEN+"="+map1.get("token"));
-        return ResponseUtils.successResult("登录成功");
+        return ResponseUtils.successResult("登录成功",map1.get("company"));
     }
 
     @PostMapping("/updateByCompanyId")
@@ -163,6 +163,26 @@ public class CompanyController {
             return ResponseUtils.failResult("修改失败");
         }
 
+    }
+
+    @GetMapping("/getName")
+    public Result getName(HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        if(header==null){
+            return ResponseUtils.failResult("未检测到token");
+        }
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        Companies company=companyService.selectAllById(companyId);
+        if(company==null){
+            return ResponseUtils.failResult("查询失败");
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("companyId",company.getId());
+        map.put("account",company.getAccount());
+        map.put("companyName",company.getName());
+        return ResponseUtils.successResult("查询成功",map);
     }
 
 }
