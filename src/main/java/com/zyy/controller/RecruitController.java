@@ -3,6 +3,7 @@ package com.zyy.controller;
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.pagehelper.PageInfo;
+import com.zyy.entity.Companies;
 import com.zyy.entity.Recruits;
 import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.service.impl.RecruitServiceImpl;
@@ -109,6 +110,7 @@ public class RecruitController {
         if(recruit==null){
             return ResponseUtils.failResult("查询失败");
         }
+        map.put("recruitId",recruit.getRecruitId());
         map.put("career",recruit.getCareer());
         map.put("type",recruit.getType());
         map.put("number",recruit.getNumber());
@@ -116,6 +118,7 @@ public class RecruitController {
         map.put("salary",recruit.getSalary());
         map.put("freefl",recruit.isFreefl());
         map.put("inform",recruit.getInform());
+        map.put("releaseDate",recruit.getReleaseDate());
         return ResponseUtils.successResult("查询成功",map);
     }
 
@@ -127,8 +130,14 @@ public class RecruitController {
         }
         List<Map<String,Object>> mapList=new ArrayList<>();
         List<Recruits> recruitsList=list.getList();
-        for(int i=0;i<=list.getSize();i++){
+        for(int i=0;i<list.getSize();i++){
             Map<String,Object> map=new HashMap<>();
+            Companies company=companyService.selectAllById(recruitsList.get(i).getCompanyId());
+            map.put("recruitId",recruitsList.get(i).getRecruitId());
+            map.put("companyName",company.getName());
+            map.put("companyAddress",company.getAddress());
+            map.put("companyEmail",company.getEmail());
+            map.put("companyPhone",company.getPhone());
             map.put("career",recruitsList.get(i).getCareer());
             map.put("type",recruitsList.get(i).getType());
             map.put("number",recruitsList.get(i).getNumber());
@@ -136,6 +145,7 @@ public class RecruitController {
             map.put("salary",recruitsList.get(i).getSalary());
             map.put("freefl",recruitsList.get(i).isFreefl());
             map.put("inform",recruitsList.get(i).getInform());
+            map.put("releaseDate",recruitsList.get(i).getReleaseDate());
             mapList.add(map);
         }
         int total= recruitService.selectRecruitNum();
