@@ -11,4 +11,5 @@ public interface CompanyMapper {
     public Companies selectAllById(String id);
     public String selectIdByEmail(String email);
     public String getIdByName(String name);
+    public String getNameById(String id);
 }

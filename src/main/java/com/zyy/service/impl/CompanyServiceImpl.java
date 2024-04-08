@@ -83,4 +83,10 @@ public class CompanyServiceImpl implements CompanyService {
         String companyId=companyMapper.getIdByName(name);
         return companyId;
     }
+
+    @Override
+    public String getNameById(String id) {
+        String companyName=companyMapper.getNameById(id);
+        return companyName;
+    }
 }

@@ -46,4 +46,8 @@
         select id from company where name=#{name}
     </select>
 
+    <select id="getNameById" parameterType="string" resultType="string">
+        select name from company where id=#{id}
+    </select>
+
 </mapper>
