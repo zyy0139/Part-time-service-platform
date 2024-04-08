@@ -93,7 +93,7 @@ public class JWTUtils {
         //获取token过期时间
         Date expiresAt = null;
         try {
-            expiresAt = JWT.require(Algorithm.HMAC512(secret))
+            expiresAt = JWT.require(Algorithm.HMAC256(secret))
                     .build()
                     .verify(token.replace(tokenPrefix, ""))
                     .getExpiresAt();
