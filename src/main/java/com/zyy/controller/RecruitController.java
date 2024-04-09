@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -49,7 +51,6 @@ public class RecruitController {
         recruit.setMessage((String)map.get("message"));
         recruit.setSalary((Integer) map.get("salary"));
         recruit.setFreefl((Boolean) map.get("freefl"));
-        recruit.setInform((String) map.get("inform"));
         recruit.setReleaseDate(releaseDate);
         int result=recruitService.sendRecruit(recruit);
         if(result==1){
@@ -93,7 +94,6 @@ public class RecruitController {
         recruit.setMessage((String) map.get("message"));
         recruit.setSalary((Integer) map.get("salary"));
         recruit.setFreefl((Boolean) map.get("freefl"));
-        recruit.setInform((String) map.get("inform"));
         recruit.setReleaseDate(releaseDate);
         int result=recruitService.updateByRecruitIdAndCompanyId(recruit);
         if(result==1){
@@ -117,7 +117,6 @@ public class RecruitController {
         map.put("message",recruit.getMessage());
         map.put("salary",recruit.getSalary());
         map.put("freefl",recruit.isFreefl());
-        map.put("inform",recruit.getInform());
         map.put("releaseDate",recruit.getReleaseDate());
         return ResponseUtils.successResult("查询成功",map);
     }
@@ -144,7 +143,6 @@ public class RecruitController {
             map.put("message",recruitsList.get(i).getMessage());
             map.put("salary",recruitsList.get(i).getSalary());
             map.put("freefl",recruitsList.get(i).isFreefl());
-            map.put("inform",recruitsList.get(i).getInform());
             map.put("releaseDate",recruitsList.get(i).getReleaseDate());
             mapList.add(map);
         }
@@ -155,26 +153,41 @@ public class RecruitController {
         return ResponseUtils.successResult("查询成功",map1);
     }
 
-    @GetMapping("/getMessageByType")
-    public Result getMessageByType(@RequestParam String type,@RequestParam String page,@RequestParam String pageSize){
-        PageInfo<Recruits> list=recruitService.selectAllBytype(type,Integer.parseInt(page),Integer.parseInt(pageSize));
+    @GetMapping("/getMessageBySearch")
+    public Result getMessageBySearch(@RequestParam String address,@RequestParam String releaseDate,
+                                      @RequestParam String type,@RequestParam String page,@RequestParam String pageSize){
+        Date date;
+        if(releaseDate.isEmpty()){
+            date=null;
+        }else {
+            DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate=LocalDate.parse(releaseDate,formatter);
+            date= java.sql.Date.valueOf(localDate);
+        }
+        PageInfo<Recruits> list=recruitService.selectAllBySearch(address,date,type,Integer.parseInt(page),Integer.parseInt(pageSize));
         if(list.getSize()==0){
-            return ResponseUtils.failResult("暂无该类型的招聘信息");
+            return ResponseUtils.failResult(ResultCode.select_fail,"暂无该类型的招聘信息");
         }
         List<Map<String,Object>> mapList=new ArrayList<>();
         List<Recruits> recruitsList=list.getList();
-        for(int i=0;i<=list.getSize();i++){
+        for(int i=0;i<list.getSize();i++){
             Map<String,Object> map=new HashMap<>();
+            Companies company=companyService.selectAllById(recruitsList.get(i).getCompanyId());
+            map.put("recruitId",recruitsList.get(i).getRecruitId());
+            map.put("companyName",company.getName());
+            map.put("companyAddress",company.getAddress());
+            map.put("companyEmail",company.getEmail());
+            map.put("companyPhone",company.getPhone());
             map.put("career",recruitsList.get(i).getCareer());
             map.put("type",recruitsList.get(i).getType());
             map.put("number",recruitsList.get(i).getNumber());
             map.put("message",recruitsList.get(i).getMessage());
             map.put("salary",recruitsList.get(i).getSalary());
             map.put("freefl",recruitsList.get(i).isFreefl());
-            map.put("inform",recruitsList.get(i).getInform());
+            map.put("releaseDate",recruitsList.get(i).getReleaseDate());
             mapList.add(map);
         }
-        int total=recruitService.selectRecruitNumByType(type);
+        int total= list.getSize();
         Map<String,Object> map1=new HashMap<>();
         map1.put("total",total);
         map1.put("recruitList",mapList);
@@ -198,7 +211,6 @@ public class RecruitController {
             map.put("message",recruitsList.get(i).getMessage());
             map.put("salary",recruitsList.get(i).getSalary());
             map.put("freefl",recruitsList.get(i).isFreefl());
-            map.put("inform",recruitsList.get(i).getInform());
             mapList.add(map);
         }
         int total=recruitService.getNumByCompanyId(companyId);

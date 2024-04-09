@@ -10,13 +10,12 @@
         <result column="message" jdbcType="VARCHAR" property="message" />
         <result column="salary" jdbcType="INTEGER" property="salary" />
         <result column="freefl" jdbcType="TINYINT" property="freefl" />
-        <result column="inform" jdbcType="VARCHAR" property="inform" />
         <result column="releaseDate" jdbcType="DATE" javaType="java.util.Date" property="releaseDate" />
     </resultMap>
 
     <insert id="sendRecruit" parameterType="com.zyy.entity.Recruits">
-        insert into recruit(recruitId, companyid, career, type,number, message, salary, freefl, inform,releaseDate)
-                    value (#{recruitId},#{companyId},#{career},#{type},#{number},#{message},#{salary},#{freefl},#{inform},#{releaseDate})
+        insert into recruit(recruitId, companyId, career, type,number, message, salary, freefl,releaseDate)
+                    value (#{recruitId},#{companyId},#{career},#{type},#{number},#{message},#{salary},#{freefl},#{releaseDate})
     </insert>
     
     <delete id="deleteByRecruitIdAndCompanyId" parameterType="string">
@@ -24,7 +23,7 @@
     </delete>
 
     <update id="updateByRecruitIdAndCompanyId" parameterType="com.zyy.entity.Recruits">
-        update recruit SET career=#{career},type=#{type},number=#{number},message=#{message},salary=#{salary},freefl=#{freefl},inform=#{inform},releaseDate=#{releaseDate}
+        update recruit SET career=#{career},type=#{type},number=#{number},message=#{message},salary=#{salary},freefl=#{freefl},releaseDate=#{releaseDate}
                         where recruitId=#{recruitId} and companyId=#{companyId}
     </update>
 
@@ -44,6 +43,10 @@
         select * from recruit where type=#{type}
     </select>
 
+    <select id="selectAllByReleaseDate" resultMap="BaseResultMap">
+        select * from recruit where releaseDate=#{releaseDate}
+    </select>
+
     <select id="selectRecruitNumByType" parameterType="string" resultType="java.lang.Integer">
         select count(*) from recruit where type=#{type}
     </select>
@@ -57,11 +60,27 @@
     </select>
 
     <select id="selectAllByCompanyId" resultMap="BaseResultMap">
-        select * from recruit where companyid=#{companyId}
+        select * from recruit where companyId=#{companyId}
     </select>
 
     <select id="selectNumByCompanyId" parameterType="string" resultType="java.lang.Integer">
-        select count(*) from recruit where companyid=#{companyId}
+        select count(*) from recruit where companyId=#{companyId}
+    </select>
+
+    <select id="selectAllByCompanyIdAndType" resultMap="BaseResultMap">
+        select * from recruit where companyId=#{companyId} and type=#{type}
+    </select>
+
+    <select id="selectAllByCompanyIdAndReleaseDate" resultMap="BaseResultMap">
+        select * from recruit where companyId=#{companyId} and releaseDate=#{releaseDate}
+    </select>
+
+    <select id="selectAllByTypeAndReleaseDate" resultMap="BaseResultMap">
+        select * from recruit where type=#{type} and releaseDate=#{releaseDate}
+    </select>
+
+    <select id="selectAllByCompanyIdAndTypeAndReleaseDate" resultMap="BaseResultMap">
+        select * from recruit where companyId=#{companyId} and type=#{type} and releaseDate=#{releaseDate}
     </select>
 
 </mapper>

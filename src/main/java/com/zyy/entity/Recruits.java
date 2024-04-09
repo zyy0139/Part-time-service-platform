@@ -18,6 +18,5 @@ public class Recruits {
     private String message; //招聘要求
     private int salary; //薪资
     private boolean freefl; //是否包吃住
-    private String inform; //联系方式
     private Date releaseDate; //发布时间
 }

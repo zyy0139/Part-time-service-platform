@@ -3,6 +3,8 @@ package com.zyy.service;
 import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Recruits;
 
+import java.util.Date;
+
 public interface RecruitService {
     public int sendRecruit(Recruits recruits);
     public int deleteByRecruitIdAndCompanyId(String recruitId,String companyId);
@@ -12,7 +14,7 @@ public interface RecruitService {
     public int selectRecruitNum();
     public int getNumber(String recruitId);
     public int updateNumber(String recruitId,int num);
-    public PageInfo<Recruits> selectAllBytype(String type,int page,int pageSize);
+    public PageInfo<Recruits> selectAllBySearch(String address, Date releaseDate, String type, int page, int pageSize);
     public int selectRecruitNumByType(String type);
     public PageInfo<Recruits> selectAllByCompanyId(String companyId,int page,int pageSize);
     public int getNumByCompanyId(String companyId);

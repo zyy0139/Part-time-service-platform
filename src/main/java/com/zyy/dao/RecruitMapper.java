@@ -2,6 +2,7 @@ package com.zyy.dao;
 
 import com.zyy.entity.Recruits;
 
+import java.util.Date;
 import java.util.List;
 
 public interface RecruitMapper {
@@ -14,7 +15,12 @@ public interface RecruitMapper {
     public int updateNumber(String recruitId,int num);
     public int getNumber(String recruitId);
     public List<Recruits> selectAllByType(String type);
+    public List<Recruits> selectAllByReleaseDate(Date releaseDate);
     public int selectRecruitNumByType(String type);
     public List<Recruits> selectAllByCompanyId(String companyId);
     public int selectNumByCompanyId(String companyId);
+    public List<Recruits> selectAllByCompanyIdAndType(String companyId,String type);
+    public List<Recruits> selectAllByCompanyIdAndReleaseDate(String companyId, Date releaseDate);
+    public List<Recruits> selectAllByTypeAndReleaseDate(String type,Date releaseDate);
+    public List<Recruits> selectAllByCompanyIdAndTypeAndReleaseDate(String companyId,String type,Date releaseDate);
 }

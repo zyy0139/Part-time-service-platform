@@ -50,4 +50,8 @@
         select name from company where id=#{id}
     </select>
 
+    <select id="selectIdByAddress" resultType="string" parameterType="string">
+        select id from company where address like CONCAT(#{address},'%')
+    </select>
+
 </mapper>

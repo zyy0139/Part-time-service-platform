@@ -2,12 +2,16 @@ package com.zyy.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.zyy.dao.CompanyMapper;
 import com.zyy.dao.RecruitMapper;
+import com.zyy.entity.Companies;
 import com.zyy.entity.Recruits;
 import com.zyy.service.RecruitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,6 +19,9 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Autowired
     private RecruitMapper recruitMapper;
+
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @Override
     public int sendRecruit(Recruits recruits) {
@@ -67,9 +74,37 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
-    public PageInfo<Recruits> selectAllBytype(String type, int page, int pageSize) {
+    public PageInfo<Recruits> selectAllBySearch(String address, Date releaseDate, String type, int page, int pageSize) {
+        List<Recruits> list=new ArrayList<>();
+        if(!address.isEmpty()){
+            List<String> companyIdList=companyMapper.selectIdByAddress(address);
+            if(releaseDate==null && type.isEmpty()){
+                for(String companyId:companyIdList){
+                    list.addAll(recruitMapper.selectAllByCompanyId(companyId));
+                }
+            }else if(type.isEmpty()){
+                for(String companyId:companyIdList){
+                    list.addAll(recruitMapper.selectAllByCompanyIdAndReleaseDate(companyId,releaseDate));
+                }
+            }else if(releaseDate==null){
+                for(String companyId:companyIdList){
+                    list.addAll(recruitMapper.selectAllByCompanyIdAndType(companyId,type));
+                }
+            }else{
+                for(String companyId:companyIdList){
+                    list.addAll(recruitMapper.selectAllByCompanyIdAndTypeAndReleaseDate(companyId,type,releaseDate));
+                }
+            }
+        } else if (releaseDate==null && type.isEmpty()) {
+            list=recruitMapper.selectAll();
+        } else if (releaseDate==null) {
+            list=recruitMapper.selectAllByType(type);
+        } else if (type.isEmpty()) {
+            list=recruitMapper.selectAllByReleaseDate(releaseDate);
+        } else{
+            list=recruitMapper.selectAllByTypeAndReleaseDate(type,releaseDate);
+        }
         PageHelper.startPage(page,pageSize);
-        List<Recruits> list=recruitMapper.selectAllByType(type);
         PageInfo<Recruits> recruits=new PageInfo<>(list);
         return recruits;
     }
