@@ -1,7 +1,9 @@
 package com.zyy.service;
 
+import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Companies;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CompanyService {
@@ -14,4 +16,6 @@ public interface CompanyService {
     public String selectIdByEmail(String email);
     public String getIdByName(String name);
     public String getNameById(String id);
+    public PageInfo<Companies> selectAll(int page, int pageSize);
+    public int selectAllNum();
 }

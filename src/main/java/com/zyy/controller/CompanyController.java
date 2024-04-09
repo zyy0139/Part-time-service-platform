@@ -2,6 +2,7 @@ package com.zyy.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Companies;
 import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.utils.*;
@@ -15,9 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -200,6 +199,31 @@ public class CompanyController {
         map.put("account",company.getAccount());
         map.put("companyName",company.getName());
         return ResponseUtils.successResult("查询成功",map);
+    }
+
+    @GetMapping("/getCompanyList")
+    public Result getCompanyList(@RequestParam String page,@RequestParam String pageSize){
+        PageInfo<Companies> list=companyService.selectAll(Integer.parseInt(page),Integer.parseInt(pageSize));
+        if(list.getSize()==0){
+            return ResponseUtils.failResult(ResultCode.select_fail,"系统暂无收录任何公司信息");
+        }
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        List<Companies> companiesList=list.getList();
+        for(Companies company:companiesList){
+            Map<String,Object> map=new HashMap<>();
+            map.put("companyId",company.getId());
+            map.put("companyName",company.getName());
+            map.put("companyAddress",company.getAddress());
+            map.put("companyPhone",company.getPhone());
+            map.put("companyEmail",company.getEmail());
+            map.put("companyCreateDate",company.getCreateDate());
+            mapList.add(map);
+        }
+        int total=companyService.selectAllNum();
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("companyList",mapList);
+        return ResponseUtils.successResult("查询成功",map1);
     }
 
 }

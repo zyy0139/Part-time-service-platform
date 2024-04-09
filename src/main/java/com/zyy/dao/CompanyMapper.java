@@ -15,4 +15,6 @@ public interface CompanyMapper {
     public String getIdByName(String name);
     public String getNameById(String id);
     public List<String> selectIdByAddress(String address);
+    public List<Companies> selectAll();
+    public int selectAllNum();
 }

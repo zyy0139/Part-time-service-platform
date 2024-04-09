@@ -1,5 +1,7 @@
 package com.zyy.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zyy.dao.CompanyMapper;
 import com.zyy.entity.Companies;
 import com.zyy.service.CompanyService;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -88,5 +91,19 @@ public class CompanyServiceImpl implements CompanyService {
     public String getNameById(String id) {
         String companyName=companyMapper.getNameById(id);
         return companyName;
+    }
+
+    @Override
+    public PageInfo<Companies> selectAll(int page, int pageSize) {
+        PageHelper.startPage(page,pageSize);
+        List<Companies> companyList=companyMapper.selectAll();
+        PageInfo<Companies> pageInfo=new PageInfo<>(companyList);
+        return pageInfo;
+    }
+
+    @Override
+    public int selectAllNum() {
+        int num=companyMapper.selectAllNum();
+        return num;
     }
 }

@@ -55,4 +55,12 @@
         select id from company where address like CONCAT(#{address},'%')
     </select>
 
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from company
+    </select>
+
+    <select id="selectAllNum" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from company
+    </select>
+
 </mapper>
