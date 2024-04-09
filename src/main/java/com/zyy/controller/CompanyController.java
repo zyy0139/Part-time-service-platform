@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,12 +110,25 @@ public class CompanyController {
     }
 
     @PostMapping("/updateByCompanyId")
-    public Result updateByCompanyId(@RequestBody Companies companies,HttpServletRequest request){
+    public Result updateByCompanyId(@RequestBody String body,HttpServletRequest request){
         String header= request.getHeader("Authorization");
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
+        Map<String,Object> map=JSON.parseObject(body,Map.class);
+        String name=String.valueOf(map.get("name"));
+        String address=String.valueOf(map.get("address"));
+        String phone=String.valueOf(map.get("phone"));
+        String createDate=String.valueOf(map.get("createDate"));
+        Companies companies=new Companies();
+        companies.setName(name);
+        companies.setAddress(address);
+        companies.setPhone(phone);
         companies.setId(companyId);
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate=LocalDate.parse(createDate,formatter);
+        Date date=java.sql.Date.valueOf(localDate);
+        companies.setCreateDate(date);
         int result=companyService.updateById(companies);
         if(result==1){
             return ResponseUtils.successResult("修改成功");
@@ -135,6 +151,7 @@ public class CompanyController {
         map.put("companyName",company.getName());
         map.put("companyAddress",company.getAddress());
         map.put("companyPhone",company.getPhone());
+        map.put("companyCreateDate",company.getCreateDate());
         return ResponseUtils.successResult("查询成功",map);
     }
 

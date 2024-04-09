@@ -2,6 +2,8 @@ package com.zyy.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /*
     企业信息类
  */
@@ -15,4 +17,5 @@ public class Companies {
     private String name;
     private String address;
     private String phone;
+    private Date createDate; //创建日期
 }

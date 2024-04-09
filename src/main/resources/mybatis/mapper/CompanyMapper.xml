@@ -9,6 +9,7 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="address" jdbcType="VARCHAR" property="address" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="createDate" javaType="java.util.Date" jdbcType="DATE" property="createDate" />
     </resultMap>
 
     <insert id="companyRegister" parameterType="com.zyy.entity.Companies">
@@ -25,7 +26,7 @@
     </select>
 
     <update id="updateById" parameterType="com.zyy.entity.Companies">
-        update company SET name=#{name},address=#{address},phone=#{phone}
+        update company SET name=#{name},address=#{address},phone=#{phone},createDate=#{createDate}
                         where id=#{id}
     </update>
 
