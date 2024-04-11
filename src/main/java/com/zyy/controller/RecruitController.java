@@ -199,18 +199,25 @@ public class RecruitController {
         String companyId=companyService.getIdByName(companyName);
         PageInfo<Recruits> list=recruitService.selectAllByCompanyId(companyId,Integer.parseInt(page),Integer.parseInt(pageSize));
         if(list.getSize()==0){
-            return ResponseUtils.failResult("暂无该公司的招聘信息");
+            return ResponseUtils.failResult(ResultCode.select_fail,"暂无该公司的招聘信息");
         }
         List<Map<String,Object>> mapList=new ArrayList<>();
         List<Recruits> recruitsList=list.getList();
-        for(int i=0;i<=list.getSize();i++){
+        for(int i=0;i<list.getSize();i++){
             Map<String,Object> map=new HashMap<>();
+            Companies company=companyService.selectAllById(recruitsList.get(i).getCompanyId());
+            map.put("recruitId",recruitsList.get(i).getRecruitId());
+            map.put("companyName",company.getName());
+            map.put("companyAddress",company.getAddress());
+            map.put("companyEmail",company.getEmail());
+            map.put("companyPhone",company.getPhone());
             map.put("career",recruitsList.get(i).getCareer());
             map.put("type",recruitsList.get(i).getType());
             map.put("number",recruitsList.get(i).getNumber());
             map.put("message",recruitsList.get(i).getMessage());
             map.put("salary",recruitsList.get(i).getSalary());
             map.put("freefl",recruitsList.get(i).isFreefl());
+            map.put("releaseDate",recruitsList.get(i).getReleaseDate());
             mapList.add(map);
         }
         int total=recruitService.getNumByCompanyId(companyId);
