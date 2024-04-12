@@ -149,6 +149,7 @@ public class CompanyController {
         Map<String,Object> map=new HashMap<>();
         map.put("companyName",company.getName());
         map.put("companyAddress",company.getAddress());
+        map.put("companyEmail",company.getEmail());
         map.put("companyPhone",company.getPhone());
         map.put("companyCreateDate",company.getCreateDate());
         return ResponseUtils.successResult("查询成功",map);
