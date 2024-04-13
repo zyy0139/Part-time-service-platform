@@ -81,7 +81,7 @@ public class RecruitController {
     }
 
     @PostMapping("/updateRecruit")
-    public Result updateRecruit(@RequestParam String recruitId,@RequestBody String body,HttpServletRequest request){
+    public Result updateRecruit(@RequestBody String body,HttpServletRequest request){
         String header= request.getHeader("Authorization");
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
@@ -89,7 +89,7 @@ public class RecruitController {
         Map<String,Object> map=JSON.parseObject(body,Map.class);
         Date releaseDate=DateUtils.getNow();
         Recruits recruit=new Recruits();
-        recruit.setRecruitId(recruitId);
+        recruit.setRecruitId((String) map.get("recruitId"));
         recruit.setCompanyId(companyId);
         recruit.setCareer((String) map.get("career"));
         recruit.setType((String) map.get("type"));
