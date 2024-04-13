@@ -5,9 +5,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Resumes;
+import com.zyy.entity.Users;
 import com.zyy.service.impl.DeliveryServiceImpl;
 import com.zyy.service.impl.RecruitServiceImpl;
 import com.zyy.service.impl.ResumeServiceImpl;
+import com.zyy.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ import java.util.Map;
 @RequestMapping("/zyy/resume")
 @CrossOrigin(origins = "*")
 public class ResumeController {
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @Autowired
     private ResumeServiceImpl resumeService;
@@ -84,8 +89,17 @@ public class ResumeController {
         List<Map<String,Object>> mapList=new ArrayList<>();
         for (int i=0;i<=userIdList.size();i++){
             Resumes resume=resumeService.getAllByUserId(userIdList.get(i));
+            String userId=resume.getUserId();
+            Users user = userService.SelectAllById(userId);
             Map<String,Object> map=new HashMap<>();
-            map.put("userId",resume.getUserId());
+            map.put("userId",userId);
+            map.put("userName",user.getName());
+            map.put("userSex",user.getSex());
+            map.put("userAge",user.getAge());
+            map.put("userAddress",user.getAddress());
+            map.put("userSchool",user.getSchool());
+            map.put("userPhone",user.getPhone());
+            map.put("userProfession",user.getProfession());
             map.put("career",resume.getCareer());
             map.put("type",resume.getType());
             map.put("skill",resume.getSkill());
