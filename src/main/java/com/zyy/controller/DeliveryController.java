@@ -72,12 +72,8 @@ public class DeliveryController {
         }
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
-        String recruitId=deliveryService.getRecruitId(userId,companyId);
-        int number=recruitService.getNumber(recruitId);
-        number+=1;
         int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
-        int result2=recruitService.updateNumber(recruitId,number);
-        if(result1==1 && result2==1){
+        if(result1==1){
             return ResponseUtils.successResult("驳回成功");
         }else {
             return ResponseUtils.failResult(ResultCode.delete_fail,"驳回失败");
