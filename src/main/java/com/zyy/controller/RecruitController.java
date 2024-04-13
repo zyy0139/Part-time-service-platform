@@ -107,7 +107,11 @@ public class RecruitController {
     }
 
     @GetMapping("/getMessage")
-    public Result getMessage(@RequestParam String recruitId,@RequestParam String companyId){
+    public Result getMessage(@RequestParam String recruitId,HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
         Map<String,Object> map=new HashMap<>();
         Recruits recruit=recruitService.selectByRecruitIdAndCompanyId(recruitId,companyId);
         if(recruit==null){
