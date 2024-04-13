@@ -136,7 +136,7 @@ public class CompanyController {
         }
     }
 
-    @PostMapping("/getCompanyMessage")
+    @GetMapping("/getCompanyMessage")
     public Result getCompanyMessage(HttpServletRequest request){
         String header= request.getHeader("Authorization");
         String token=header.substring(18);
