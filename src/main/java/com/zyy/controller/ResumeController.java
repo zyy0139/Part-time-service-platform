@@ -36,6 +36,9 @@ public class ResumeController {
     @Autowired
     private DeliveryServiceImpl deliveryService;
 
+    @Autowired
+    private RecruitServiceImpl recruitService;
+
     @PostMapping("/addResume")
     public Result addResume(@RequestBody String body, HttpServletRequest request){
         if(body==null){
@@ -89,10 +92,12 @@ public class ResumeController {
         List<Map<String,Object>> mapList=new ArrayList<>();
         for (int i=0;i<=userIdList.size();i++){
             Resumes resume=resumeService.getAllByUserId(userIdList.get(i));
-            String userId=resume.getUserId();
-            Users user = userService.SelectAllById(userId);
+            Users user = userService.SelectAllById(userIdList.get(i));
+            String recruitId = deliveryService.getRecruitId(userIdList.get(i),companyId);
+            String recruitName = recruitService.getCareerByRecruitId(recruitId);
             Map<String,Object> map=new HashMap<>();
-            map.put("userId",userId);
+            map.put("userId",userIdList.get(i));
+            map.put("recruitId",recruitId);
             map.put("userName",user.getName());
             map.put("userSex",user.getSex());
             map.put("userAge",user.getAge());
@@ -101,6 +106,7 @@ public class ResumeController {
             map.put("userPhone",user.getPhone());
             map.put("userProfession",user.getProfession());
             map.put("career",resume.getCareer());
+            map.put("recruitName",recruitName);
             map.put("type",resume.getType());
             map.put("skill",resume.getSkill());
             map.put("experience",resume.getExperience());
