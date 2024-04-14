@@ -24,4 +24,5 @@ public interface RecruitMapper {
     public List<Recruits> selectAllByTypeAndReleaseDate(String type,Date releaseDate);
     public List<Recruits> selectAllByCompanyIdAndTypeAndReleaseDate(String companyId,String type,Date releaseDate);
     public String getCareerByRecruitId(String recruitId);
+    public List<String> getCareerListByCompanyId(String companyId);
 }

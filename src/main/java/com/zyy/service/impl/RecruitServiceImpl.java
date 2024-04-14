@@ -134,4 +134,10 @@ public class RecruitServiceImpl implements RecruitService {
         String career=recruitMapper.getCareerByRecruitId(recruitId);
         return career;
     }
+
+    @Override
+    public List<String> getCareerList(String companyId) {
+        List<String> careerList=recruitMapper.getCareerListByCompanyId(companyId);
+        return careerList;
+    }
 }

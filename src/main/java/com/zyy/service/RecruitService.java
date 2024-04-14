@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Recruits;
 
 import java.util.Date;
+import java.util.List;
 
 public interface RecruitService {
     public int sendRecruit(Recruits recruits);
@@ -19,4 +20,5 @@ public interface RecruitService {
     public PageInfo<Recruits> selectAllByCompanyId(String companyId,int page,int pageSize);
     public int getNumByCompanyId(String companyId);
     public String getCareerByRecruitId(String recruitId);
+    public List<String> getCareerList(String companyId);
 }

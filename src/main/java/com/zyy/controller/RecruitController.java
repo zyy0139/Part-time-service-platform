@@ -226,4 +226,16 @@ public class RecruitController {
         return ResponseUtils.successResult("查询成功",map);
     }
 
+    @GetMapping("/getCareerList")
+    public Result getCareerList(HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        List<String> careerList = recruitService.getCareerList(companyId);
+        Map<String,Object> map=new HashMap<>();
+        map.put("careerList",careerList);
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
 }

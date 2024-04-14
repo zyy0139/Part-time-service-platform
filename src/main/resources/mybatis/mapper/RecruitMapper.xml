@@ -87,4 +87,8 @@
         select career from recruit where recruitId=#{recruitId}
     </select>
 
+    <select id="getCareerListByCompanyId" resultType="string">
+        select career from recruit where companyId=#{companyId}
+    </select>
+
 </mapper>
