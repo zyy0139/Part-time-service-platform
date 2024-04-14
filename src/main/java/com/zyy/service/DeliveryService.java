@@ -10,4 +10,5 @@ public interface DeliveryService {
     public int addDelivery(Deliveries deliveries);
     public int deleteByUserIdAndCompanyId(String userId,String companyId);
     public String getRecruitId(String userId,String companyId);
+    public Deliveries getMessage(String userId,String companyId,String recruitId);
 }

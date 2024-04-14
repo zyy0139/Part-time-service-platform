@@ -38,38 +38,41 @@ public class DeliveryController {
 
     @PostMapping("/addDelivery")
     public Result addDelivery(@RequestParam String recruitId,@RequestParam String companyName, HttpServletRequest request){
-        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
-        if(token==null){
-            return ResponseUtils.failResult("无法解析到token");
+        String header= request.getHeader("Authorization");
+        if(header==null){
+            return ResponseUtils.failResult("未检测到token");
         }
+        String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
         String companyId=companyService.getIdByName(companyName);
+        int number = recruitService.getNumber(recruitId);
+        if(number==0){
+            return ResponseUtils.failResult(ResultCode.add_fail,"该岗位已无空余名额");
+        }
+        Deliveries isDelivery = deliveryService.getMessage(userId,companyId,recruitId);
+        if(isDelivery == null){
+            return ResponseUtils.failResult(ResultCode.exist_already,"您已投递过该岗位");
+        }
         Deliveries delivery=new Deliveries();
         delivery.setUserId(userId);
         delivery.setCompanyId(companyId);
         delivery.setRecruitId(recruitId);
-        //防并发处理
-        RLock redissonLock=redisson.getLock(recruitId);
-        redissonLock.lock();
-        try {
-            int result=deliveryService.addDelivery(delivery);
-            if(result==1){
-                return ResponseUtils.successResult("投递成功");
-            }else {
-                return ResponseUtils.failResult("投递失败");
-            }
-        }finally {
-            redissonLock.unlock();
+        int result=deliveryService.addDelivery(delivery);
+        if(result==1){
+            return ResponseUtils.successResult("投递成功");
+        }else {
+            return ResponseUtils.failResult("投递失败");
         }
     }
 
     @DeleteMapping("/passDelivery")
     public Result passDelivery(@RequestParam String userId,HttpServletRequest request){
-        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
-        if(token==null){
-            return ResponseUtils.failResult("无法解析到token");
+        String header= request.getHeader("Authorization");
+        if(header==null){
+            return ResponseUtils.failResult("未检测到token");
         }
+        String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
@@ -82,10 +85,11 @@ public class DeliveryController {
 
     @DeleteMapping("/admitDelivery")
     public Result admitDelivery(@RequestParam String userId,@RequestParam String recruitId,HttpServletRequest request){
-        String token=String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
-        if(token==null){
-            return ResponseUtils.failResult("无法解析到token");
+        String header= request.getHeader("Authorization");
+        if(header==null){
+            return ResponseUtils.failResult("未检测到token");
         }
+        String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         int number=recruitService.getNumber(recruitId);

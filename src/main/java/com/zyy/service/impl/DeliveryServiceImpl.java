@@ -43,4 +43,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         String recruitId=deliveryMapper.getRecruitId(userId,companyId);
         return recruitId;
     }
+
+    @Override
+    public Deliveries getMessage(String userId, String companyId, String recruitId) {
+        Deliveries delivery=deliveryMapper.getMessage(userId,companyId,recruitId);
+        return delivery;
+    }
 }

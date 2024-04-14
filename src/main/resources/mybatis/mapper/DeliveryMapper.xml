@@ -29,4 +29,8 @@
         select recruitId from delivery where userId=#{userId} and companyId=#{companyId}
     </select>
 
+    <select id="getMessage" resultMap="BaseResultMap">
+        select * from delivery where userId=#{userId} and companyId=#{companyId} and recruitId=#{recruitId}
+    </select>
+
 </mapper>
