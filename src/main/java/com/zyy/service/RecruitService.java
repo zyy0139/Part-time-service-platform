@@ -18,4 +18,5 @@ public interface RecruitService {
     public int selectRecruitNumByType(String type);
     public PageInfo<Recruits> selectAllByCompanyId(String companyId,int page,int pageSize);
     public int getNumByCompanyId(String companyId);
+    public String getCareerByRecruitId(String recruitId);
 }

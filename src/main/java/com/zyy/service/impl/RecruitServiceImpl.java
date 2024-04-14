@@ -128,4 +128,10 @@ public class RecruitServiceImpl implements RecruitService {
         int num=recruitMapper.selectNumByCompanyId(companyId);
         return num;
     }
+
+    @Override
+    public String getCareerByRecruitId(String recruitId) {
+        String career=recruitMapper.getCareerByRecruitId(recruitId);
+        return career;
+    }
 }

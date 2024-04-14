@@ -83,4 +83,8 @@
         select * from recruit where companyId=#{companyId} and type=#{type} and releaseDate=#{releaseDate}
     </select>
 
+    <select id="getCareerByRecruitId" parameterType="string" resultType="string">
+        select career from recruit where recruitId=#{recruitId}
+    </select>
+
 </mapper>
