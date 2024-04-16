@@ -93,16 +93,20 @@ public class DeliveryController {
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         int number=recruitService.getNumber(recruitId);
-        int result1=deliveryService.deleteDelivery(userId,companyId,recruitId);
-        int result2=userService.updateIsAdmitByUserId(userId);
-        number-=1;
-        int result3=recruitService.updateNumber(recruitId,number);
-        if(result1==1 && result2==1 && result3==1){
+        number -=1;
+        int result1 = recruitService.updateNumber(recruitId,number);
+        if(result1==0){
+            return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
+        }
+        int result2 = userService.updateIsAdmitByUserId(userId);
+        if(result2==0){
+            return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
+        }
+        int result3 = deliveryService.deleteDelivery(userId,companyId,recruitId);
+        if(result3==1){
             return ResponseUtils.successResult("录用成功");
-        }else if (result1!=1){
-            return ResponseUtils.failResult(ResultCode.delete_fail,"删除信息失败");
         }else {
-            return ResponseUtils.failResult(ResultCode.update_fail,"修改信息失败");
+            return ResponseUtils.failResult(ResultCode.delete_fail,"录用失败");
         }
     }
 
