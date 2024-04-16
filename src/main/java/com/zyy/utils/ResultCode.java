@@ -12,4 +12,5 @@ public class ResultCode {
     public static final int update_fail=409;//修改数据失败
     public static final int add_fail=421;//添加数据失败
     public static final int exist_already=401;//数据已存在
+    public static final int not_found = 422; //数据不存在
 }
