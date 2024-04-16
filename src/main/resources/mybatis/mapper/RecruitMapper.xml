@@ -51,7 +51,7 @@
         select count(*) from recruit where type=#{type}
     </select>
 
-    <update id="updateNumber" parameterType="string">
+    <update id="updateNumber">
         update recruit SET number=#{number} where recruitId=#{recruitId}
     </update>
 
@@ -85,6 +85,10 @@
 
     <select id="getCareerByRecruitId" parameterType="string" resultType="string">
         select career from recruit where recruitId=#{recruitId}
+    </select>
+
+    <select id="getRecruitIdByCareer" parameterType="string" resultType="string">
+        select recruitId from recruit where career=#{career}
     </select>
 
     <select id="getCareerListByCompanyId" resultType="string">
