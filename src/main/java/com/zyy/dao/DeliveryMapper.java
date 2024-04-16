@@ -5,10 +5,12 @@ import com.zyy.entity.Deliveries;
 import java.util.List;
 
 public interface DeliveryMapper {
-    public List<String> getUserIdByCompanyId(String companyId);
+    public List<Deliveries> getAllByCompanyId(String companyId);
+    public List<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruitId);
     public int getNumByCompanyId(String companyId);
+    public int getNumByCompanyIdAndRecruitId(String companyId, String recruitId);
     public int addDelivery(Deliveries deliveries);
-    public int deleteByUserIdAndCompanyId(String userId,String companyId);
+    public int deleteDelivery(String userId,String companyId,String recruitId);
     public String getRecruitId(String userId,String companyId);
     public Deliveries getMessage(String userId,String companyId,String recruitId);
 }

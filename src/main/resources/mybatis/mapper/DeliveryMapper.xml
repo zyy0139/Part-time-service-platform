@@ -8,12 +8,20 @@
     </resultMap>
 
 
-    <select id="getUserIdByCompanyId" resultMap="BaseResultMap">
-        select userId from delivery where companyId=#{companyId}
+    <select id="getAllByCompanyId" resultMap="BaseResultMap">
+        select * from delivery where companyId=#{companyId}
+    </select>
+
+    <select id="getAllByCompanyIdAndRecruitId" resultMap="BaseResultMap">
+        select * from delivery where companyId=#{companyId} and recruitId=#{recruitId}
     </select>
 
     <select id="getNumByCompanyId" parameterType="string" resultType="java.lang.Integer">
         select count(*) from delivery where companyId=#{companyId}
+    </select>
+
+    <select id="getNumByCompanyIdAndRecruitId" parameterType="string" resultType="java.lang.Integer">
+        select count(*) from delivery where companyId=#{companyId} and recruitId=#{recruitId}
     </select>
 
     <insert id="addDelivery" parameterType="com.zyy.entity.Deliveries">
@@ -21,8 +29,8 @@
                 value (#{userId},#{companyId},#{recruitId})
     </insert>
 
-    <delete id="deleteByUserIdAndCompanyId" parameterType="string">
-        delete from delivery where userId=#{userId} and companyId=#{companyId}
+    <delete id="deleteDelivery" parameterType="string">
+        delete from delivery where userId=#{userId} and companyId=#{companyId} and recruitId=#{recruitId}
     </delete>
 
     <select id="getRecruitId" parameterType="string" resultMap="BaseResultMap">

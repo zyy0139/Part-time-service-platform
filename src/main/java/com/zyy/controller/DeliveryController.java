@@ -67,7 +67,7 @@ public class DeliveryController {
     }
 
     @DeleteMapping("/passDelivery")
-    public Result passDelivery(@RequestParam String userId,HttpServletRequest request){
+    public Result passDelivery(@RequestParam String userId,@RequestParam String recruitId,HttpServletRequest request){
         String header= request.getHeader("Authorization");
         if(header==null){
             return ResponseUtils.failResult("未检测到token");
@@ -75,7 +75,7 @@ public class DeliveryController {
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
-        int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
+        int result1=deliveryService.deleteDelivery(userId,companyId,recruitId);
         if(result1==1){
             return ResponseUtils.successResult("驳回成功");
         }else {
@@ -93,7 +93,7 @@ public class DeliveryController {
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
         int number=recruitService.getNumber(recruitId);
-        int result1=deliveryService.deleteByUserIdAndCompanyId(userId,companyId);
+        int result1=deliveryService.deleteDelivery(userId,companyId,recruitId);
         int result2=userService.updateIsAdmitByUserId(userId);
         number-=1;
         int result3=recruitService.updateNumber(recruitId,number);

@@ -14,15 +14,28 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Autowired
     private DeliveryMapper deliveryMapper;
 
+
     @Override
-    public List<String> getUserIdByCompanyId(String companyId) {
-        List<String> userIdList=deliveryMapper.getUserIdByCompanyId(companyId);
-        return userIdList;
+    public List<Deliveries> getAllByCompanyId(String companyId) {
+        List<Deliveries> deliveryList = deliveryMapper.getAllByCompanyId(companyId);
+        return deliveryList;
+    }
+
+    @Override
+    public List<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruiterId) {
+        List<Deliveries> deliveryList = deliveryMapper.getAllByCompanyIdAndRecruitId(companyId, recruiterId);
+        return deliveryList;
     }
 
     @Override
     public int getNumByCompanyId(String companyId) {
         int num=deliveryMapper.getNumByCompanyId(companyId);
+        return num;
+    }
+
+    @Override
+    public int getNumByCompanyIdAndRecruitId(String companyId, String recruiterId) {
+        int num=deliveryMapper.getNumByCompanyIdAndRecruitId(companyId,recruiterId);
         return num;
     }
 
@@ -33,8 +46,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public int deleteByUserIdAndCompanyId(String userId, String companyId) {
-        int result=deliveryMapper.deleteByUserIdAndCompanyId(userId,companyId);
+    public int deleteDelivery(String userId, String companyId, String recruitId) {
+        int result=deliveryMapper.deleteDelivery(userId,companyId,recruitId);
         return result;
     }
 
