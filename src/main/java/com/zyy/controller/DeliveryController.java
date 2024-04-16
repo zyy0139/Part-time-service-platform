@@ -92,22 +92,33 @@ public class DeliveryController {
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
-        int number=recruitService.getNumber(recruitId);
-        number -=1;
-        int result1 = recruitService.updateNumber(recruitId,number);
-        if(result1==0){
-            return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
+        // 防并发处理
+        RLock redissonLock = redisson.getLock(companyId);
+        redissonLock.lock(); // 加锁
+        try {
+            int number=recruitService.getNumber(recruitId);
+            number -=1;
+            int result1 = recruitService.updateNumber(recruitId,number);
+            if(result1==0){
+                return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
+            }
+            int result2 = userService.updateIsAdmitByUserId(userId);
+            if(result2==0){
+                return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
+            }
+            int result3 = deliveryService.deleteDelivery(userId,companyId,recruitId);
+            if(result3==1){
+                return ResponseUtils.successResult("录用成功");
+            }else {
+                return ResponseUtils.failResult(ResultCode.delete_fail,"录用失败");
+            }
+        }catch (Exception e){
+            log.error("admitDelivery error",e); // 打印日志
+            return ResponseUtils.failResult("系统错误");
+        }finally {
+            redissonLock.unlock(); // 解锁
         }
-        int result2 = userService.updateIsAdmitByUserId(userId);
-        if(result2==0){
-            return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
-        }
-        int result3 = deliveryService.deleteDelivery(userId,companyId,recruitId);
-        if(result3==1){
-            return ResponseUtils.successResult("录用成功");
-        }else {
-            return ResponseUtils.failResult(ResultCode.delete_fail,"录用失败");
-        }
+
     }
 
 }
