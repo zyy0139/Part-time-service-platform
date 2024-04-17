@@ -188,8 +188,8 @@ public class RecruitServiceImpl implements RecruitService {
         for(String type:typeList){
             int count = recruitMapper.getNumByType(type); // 统计该类型信息的数量
             Map<String, Object> map=new HashMap<>();
-            map.put("type",type);
-            map.put("count",count);
+            map.put("name",type);
+            map.put("value",count);
             list.add(map);
         }
         return list;
