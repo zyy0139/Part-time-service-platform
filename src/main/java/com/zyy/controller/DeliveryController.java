@@ -2,10 +2,8 @@ package com.zyy.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.Deliveries;
-import com.zyy.service.impl.CompanyServiceImpl;
-import com.zyy.service.impl.DeliveryServiceImpl;
-import com.zyy.service.impl.RecruitServiceImpl;
-import com.zyy.service.impl.UserServiceImpl;
+import com.zyy.entity.UserMessages;
+import com.zyy.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -32,6 +31,9 @@ public class DeliveryController {
 
     @Autowired
     private CompanyServiceImpl companyService;
+
+    @Autowired
+    private UserMessageServiceImpl userMessageService;
 
     @Autowired
     private Redisson redisson;
@@ -75,11 +77,26 @@ public class DeliveryController {
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
         String companyId=jwt.getSubject();
+        UserMessages userMessage = new UserMessages();
+        String messageId = RadomUtils.creatId();
+        String title = "简历未通过";
+        String content = "很抱歉通知您，您所投递的"+companyService.getNameById(companyId)
+                +"公司的"+recruitService.getCareerByRecruitId(recruitId)+"岗位未能通过简历筛选，请您重新投递。";
+        Date newDate = DateUtils.getNow();
+        userMessage.setMessageId(messageId);
+        userMessage.setUserId(userId);
+        userMessage.setTitle(title);
+        userMessage.setContent(content);
+        userMessage.setSendDate(newDate);
+        userMessage.setIsRead(false);
         int result1=deliveryService.deleteDelivery(userId,companyId,recruitId);
-        if(result1==1){
+        int result2= userMessageService.sendMessage(userMessage);
+        if(result1==1 && result2==1){
             return ResponseUtils.successResult("驳回成功");
-        }else {
+        } else if (result1 == 0) {
             return ResponseUtils.failResult(ResultCode.delete_fail,"驳回失败");
+        }else {
+            return ResponseUtils.failResult(ResultCode.add_fail,"发送消息失败");
         }
     }
 
@@ -106,8 +123,24 @@ public class DeliveryController {
             if(result2==0){
                 return ResponseUtils.failResult(ResultCode.update_fail,"更新数据失败");
             }
-            int result3 = deliveryService.deleteDelivery(userId,companyId,recruitId);
-            if(result3==1){
+            UserMessages userMessage = new UserMessages();
+            String messageId = RadomUtils.creatId();
+            String title = "简历已通过";
+            String content = "恭喜您，您所投递的"+companyService.getNameById(companyId)
+                    +"公司的"+recruitService.getCareerByRecruitId(recruitId)+"岗位已通过简历筛选，祝您的兼职生活愉快!";
+            Date newDate = DateUtils.getNow();
+            userMessage.setMessageId(messageId);
+            userMessage.setUserId(userId);
+            userMessage.setTitle(title);
+            userMessage.setContent(content);
+            userMessage.setSendDate(newDate);
+            userMessage.setIsRead(false);
+            int result3 = userMessageService.sendMessage(userMessage);
+            if(result3==0){
+                return ResponseUtils.failResult(ResultCode.add_fail,"发送消息失败");
+            }
+            int result4 = deliveryService.deleteDelivery(userId,companyId,recruitId);
+            if(result4==1){
                 return ResponseUtils.successResult("录用成功");
             }else {
                 return ResponseUtils.failResult(ResultCode.delete_fail,"录用失败");
