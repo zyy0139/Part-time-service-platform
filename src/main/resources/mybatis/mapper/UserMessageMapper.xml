@@ -11,8 +11,8 @@
     </resultMap>
 
     <insert id="sendMessage" parameterType="com.zyy.entity.UserMessages">
-        insert into usermessage(messageId,userId, title, content, isRead, sendDate)
-        value (#{messageId},#{userId}, #{title}, #{content}, #{isRead}, #{sendDate})
+        insert into usermessage(messageId,companyId, userId, title, content, isRead, sendDate)
+        value (#{messageId},#{companyId},#{userId}, #{title}, #{content}, #{isRead}, #{sendDate})
     </insert>
 
     <delete id="deleteByMessageId" parameterType="java.lang.String">

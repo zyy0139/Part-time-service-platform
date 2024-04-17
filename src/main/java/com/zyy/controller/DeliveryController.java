@@ -84,6 +84,7 @@ public class DeliveryController {
                 +"公司的"+recruitService.getCareerByRecruitId(recruitId)+"岗位未能通过简历筛选，请您重新投递。";
         Date newDate = DateUtils.getNow();
         userMessage.setMessageId(messageId);
+        userMessage.setCompanyId(companyId);
         userMessage.setUserId(userId);
         userMessage.setTitle(title);
         userMessage.setContent(content);
@@ -130,6 +131,7 @@ public class DeliveryController {
                     +"公司的"+recruitService.getCareerByRecruitId(recruitId)+"岗位已通过简历筛选，祝您的兼职生活愉快!";
             Date newDate = DateUtils.getNow();
             userMessage.setMessageId(messageId);
+            userMessage.setCompanyId(companyId);
             userMessage.setUserId(userId);
             userMessage.setTitle(title);
             userMessage.setContent(content);
