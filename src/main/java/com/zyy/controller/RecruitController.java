@@ -238,4 +238,10 @@ public class RecruitController {
         return ResponseUtils.successResult("查询成功",map);
     }
 
+    @GetMapping("/getCountByDate")
+    public Result getCountByDate(@RequestParam String startDate, @RequestParam String endDate){
+        List<Map<String,Object>> list = recruitService.getRecruitCountList(startDate, endDate);
+        return ResponseUtils.successResult("查询成功",list);
+    }
+
 }

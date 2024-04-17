@@ -10,9 +10,9 @@ import com.zyy.service.RecruitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 public class RecruitServiceImpl implements RecruitService {
@@ -145,5 +145,36 @@ public class RecruitServiceImpl implements RecruitService {
     public List<String> getCareerList(String companyId) {
         List<String> careerList=recruitMapper.getCareerListByCompanyId(companyId);
         return careerList;
+    }
+
+    @Override
+    public List<Map<String, Object>> getRecruitCountList(String start, String end) {
+        Date startDate;
+        Date endDate;
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startLocalDate=LocalDate.parse(start,formatter);
+        LocalDate endLocalDate=LocalDate.parse(end,formatter);
+        startDate= java.sql.Date.valueOf(startLocalDate);
+        endDate= java.sql.Date.valueOf(endLocalDate);
+        int total = recruitMapper.getNumByStartAndEnd(startDate,endDate); // 统计总数量
+        List<Map<String, Object>> list=new ArrayList<>();
+        while (startDate.before(endDate)){
+            int count = recruitMapper.getNumByReleaseDate(startDate); // 统计当天发布的数量
+            Map<String, Object> map=new HashMap<>();
+            map.put("date",startDate);
+            map.put("newCount",count);
+            map.put("allCount",total);
+            list.add(map);
+            LocalDate newStartLocalDate = startLocalDate.plusDays(1);// 日期加一天
+            startLocalDate = newStartLocalDate;
+            startDate = java.sql.Date.valueOf(newStartLocalDate);
+        }
+        int count = recruitMapper.getNumByReleaseDate(endDate); // 最后一天的数量
+        Map<String, Object> map=new HashMap<>();
+        map.put("date",endDate);
+        map.put("newCount",count);
+        map.put("allCount",total);
+        list.add(map);
+        return list;
     }
 }

@@ -95,4 +95,12 @@
         select career from recruit where companyId=#{companyId}
     </select>
 
+    <select id="getNumByStartAndEnd" resultType="java.lang.Integer">
+        select count(*) from (select * from recruit where releaseDate between #{start} and #{end}) as `SE`
+    </select>
+
+    <select id="getNumByReleaseDate" resultType="java.lang.Integer">
+        select count(*) from (select * from recruit where releaseDate = #{releaseDate}) as `TD`
+    </select>
+
 </mapper>

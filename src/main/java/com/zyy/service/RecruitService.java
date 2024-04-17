@@ -5,6 +5,7 @@ import com.zyy.entity.Recruits;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface RecruitService {
     public int sendRecruit(Recruits recruits);
@@ -22,4 +23,5 @@ public interface RecruitService {
     public String getCareerByRecruitId(String recruitId);
     public String getRecruitIdByCareer(String career);
     public List<String> getCareerList(String companyId);
+    public List<Map<String,Object>> getRecruitCountList(String start,String end);
 }

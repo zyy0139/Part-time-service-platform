@@ -26,4 +26,6 @@ public interface RecruitMapper {
     public String getCareerByRecruitId(String recruitId);
     public String getRecruitIdByCareer(String career);
     public List<String> getCareerListByCompanyId(String companyId);
+    public int getNumByStartAndEnd(Date start,Date end);
+    public int getNumByReleaseDate(Date releaseDate);
 }
