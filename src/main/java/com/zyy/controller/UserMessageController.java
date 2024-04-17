@@ -34,6 +34,7 @@ public class UserMessageController {
         for (UserMessages userMessage : userMessageList) {
             Map<String,Object> map = new HashMap<>();
             map.put("messageId",userMessage.getMessageId());
+            map.put("companyId", userMessage.getCompanyId());
             map.put("userId",userMessage.getUserId());
             map.put("title",userMessage.getTitle());
             map.put("content", userMessage.getContent());
