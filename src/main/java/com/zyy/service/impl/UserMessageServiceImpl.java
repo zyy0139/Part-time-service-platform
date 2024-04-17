@@ -43,4 +43,9 @@ public class UserMessageServiceImpl implements UserMessageService {
     public int getCountByUserIdAndIsRead(String userId) {
         return userMessageMapper.getCountByUserIdAndIsRead(userId);
     }
+
+    @Override
+    public int updateIsRead(String messageId) {
+        return userMessageMapper.updateIsReadByMessageId(messageId);
+    }
 }

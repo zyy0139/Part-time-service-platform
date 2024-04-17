@@ -11,4 +11,5 @@ public interface UserMessageService {
     public List<UserMessages> getListByUserId(String userId);
     public int getCountByUserId(String userId);
     public int getCountByUserIdAndIsRead(String userId);
+    public int updateIsRead(String messageId);
 }

@@ -74,4 +74,14 @@ public class UserMessageController {
         }
     }
 
+    @PostMapping("updateIsRead")
+    public Result updateIsRead(@RequestParam String messageId){
+        int result = userMessageService.updateIsRead(messageId);
+        if(result == 1) {
+            return ResponseUtils.successResult("更新成功");
+        }else {
+            return ResponseUtils.failResult("更新失败");
+        }
+    }
+
 }
