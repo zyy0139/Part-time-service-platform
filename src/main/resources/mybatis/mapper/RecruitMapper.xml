@@ -103,4 +103,8 @@
         select count(*) from (select * from recruit where releaseDate = #{releaseDate}) as `TD`
     </select>
 
+    <select id="getNumByType" resultType="java.lang.Integer">
+        select count(*) from (select * from recruit where type = #{type}) as `TY`
+    </select>
+
 </mapper>

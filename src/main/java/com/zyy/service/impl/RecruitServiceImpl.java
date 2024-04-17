@@ -23,6 +23,9 @@ public class RecruitServiceImpl implements RecruitService {
     @Autowired
     private CompanyMapper companyMapper;
 
+    @Autowired
+    private WorkTypeServiceImpl workTypeService;
+
     @Override
     public int sendRecruit(Recruits recruits) {
         int result=recruitMapper.sendRecruit(recruits);
@@ -175,6 +178,20 @@ public class RecruitServiceImpl implements RecruitService {
         map.put("newCount",count);
         map.put("allCount",total);
         list.add(map);
+        return list;
+    }
+
+    @Override
+    public List<Map<String, Object>> getRecruitCountByType(){
+        List<String> typeList=workTypeService.getType();
+        List<Map<String, Object>> list=new ArrayList<>();
+        for(String type:typeList){
+            int count = recruitMapper.getNumByType(type); // 统计该类型信息的数量
+            Map<String, Object> map=new HashMap<>();
+            map.put("type",type);
+            map.put("count",count);
+            list.add(map);
+        }
         return list;
     }
 }

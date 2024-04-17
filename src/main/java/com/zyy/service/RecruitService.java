@@ -24,4 +24,5 @@ public interface RecruitService {
     public String getRecruitIdByCareer(String career);
     public List<String> getCareerList(String companyId);
     public List<Map<String,Object>> getRecruitCountList(String start,String end);
+    public List<Map<String, Object>> getRecruitCountByType();
 }

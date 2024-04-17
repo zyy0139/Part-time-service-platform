@@ -244,4 +244,10 @@ public class RecruitController {
         return ResponseUtils.successResult("查询成功",list);
     }
 
+    @GetMapping("/getCountByType")
+    public Result getCountByType(){
+        List<Map<String,Object>> list = recruitService.getRecruitCountByType();
+        return ResponseUtils.successResult("查询成功",list);
+    }
+
 }
