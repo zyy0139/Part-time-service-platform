@@ -55,7 +55,7 @@ public class DeliveryController {
             return ResponseUtils.failResult(ResultCode.add_fail,"该岗位已无空余名额");
         }
         Deliveries isDelivery = deliveryService.getMessage(userId,companyId,recruitId);
-        if(isDelivery == null){
+        if(isDelivery!=null){
             return ResponseUtils.failResult(ResultCode.exist_already,"您已投递过该岗位");
         }
         Deliveries delivery=new Deliveries();
