@@ -7,6 +7,7 @@ import java.util.Date;
 public class DateUtils {
     public static Date getNow(){
         LocalDate localDate=LocalDate.now();
+        localDate = localDate.plusDays(1);
         ZoneId zoneId=ZoneId.of("Asia/Shanghai");
         Date nowDate=Date.from(localDate.atStartOfDay(zoneId).toInstant());
         return nowDate;
