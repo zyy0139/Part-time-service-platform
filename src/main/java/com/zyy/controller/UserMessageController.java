@@ -2,6 +2,7 @@ package com.zyy.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.zyy.entity.UserMessages;
+import com.zyy.service.impl.CompanyServiceImpl;
 import com.zyy.service.impl.UserMessageServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserMessageController {
     @Autowired
     private UserMessageServiceImpl userMessageService;
 
+    @Autowired
+    private CompanyServiceImpl companyService;
+
     @GetMapping("getUserMessageList")
     public Result getUserMessageList(HttpServletRequest request){ // 获取用户消息列表
         String header = request.getHeader("Authorization");
@@ -33,8 +37,9 @@ public class UserMessageController {
         List<Map<String,Object>> mapList = new ArrayList<>();
         for (UserMessages userMessage : userMessageList) {
             Map<String,Object> map = new HashMap<>();
+            String companyName = companyService.getNameById(userMessage.getCompanyId());
             map.put("messageId",userMessage.getMessageId());
-            map.put("companyId", userMessage.getCompanyId());
+            map.put("companyName", companyName);
             map.put("userId",userMessage.getUserId());
             map.put("title",userMessage.getTitle());
             map.put("content", userMessage.getContent());
