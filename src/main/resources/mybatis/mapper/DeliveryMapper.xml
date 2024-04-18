@@ -42,4 +42,18 @@
         select * from delivery where userId=#{userId} and companyId=#{companyId} and recruitId=#{recruitId}
     </select>
 
+    <select id="getCountByStartAndEnd" resultType="java.lang.Integer">
+        select count(*) from (select * from delivery where sendDate between #{start} and #{end}) as 'SE'
+                        where companyId=#{companyId}
+    </select>
+
+    <select id="getCountByDate" resultType="java.lang.Integer">
+        select count(*) from (select * from delivery where sendDate = #{date}) as 'DT'
+                        where companyId=#{companyId}
+    </select>
+
+    <select id="getCountByRecruitId" resultType="java.lang.Integer">
+        select count(*) from (select * from delivery where recruitId = #{recruitId}) as 'RID'
+    </select>
+
 </mapper>

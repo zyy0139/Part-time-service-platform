@@ -13,6 +13,8 @@ import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -156,6 +158,26 @@ public class DeliveryController {
             redissonLock.unlock(); // 解锁
         }
 
+    }
+
+    @GetMapping("/getCountByDate")
+    public Result getCountByDate(@RequestParam String start, @RequestParam String end, HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        List<Map<String,Object>> list = deliveryService.getCountByDate(start,end,companyId);
+        return ResponseUtils.successResult("查询成功",list);
+    }
+
+    @GetMapping("/getCountByType")
+    public Result getCountByType(HttpServletRequest request){
+        String header= request.getHeader("Authorization");
+        String token=header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        List<Map<String,Object>> list = deliveryService.getCountByRecruitId(companyId);
+        return ResponseUtils.successResult("查询成功",list);
     }
 
 }
