@@ -5,6 +5,7 @@
         <id column="userId" jdbcType="VARCHAR" property="userId" />
         <result column="companyId" jdbcType="VARCHAR" property="companyId" />
         <result column="recruitId" jdbcType="VARCHAR" property="recruitId" />
+        <result column="sendDate" jdbcType="DATE" javaType="java.util.Date" property="sendDate" />
     </resultMap>
 
 
@@ -25,8 +26,8 @@
     </select>
 
     <insert id="addDelivery" parameterType="com.zyy.entity.Deliveries">
-        insert into delivery(userId, companyId, recruitId)
-                value (#{userId},#{companyId},#{recruitId})
+        insert into delivery(userId, companyId, recruitId, sendDate)
+                value (#{userId},#{companyId},#{recruitId},#{sendDate})
     </insert>
 
     <delete id="deleteDelivery" parameterType="string">

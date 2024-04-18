@@ -60,6 +60,8 @@ public class DeliveryController {
         delivery.setUserId(userId);
         delivery.setCompanyId(companyId);
         delivery.setRecruitId(recruitId);
+        Date nowDate = DateUtils.getNow();
+        delivery.setSendDate(nowDate);
         int result=deliveryService.addDelivery(delivery);
         if(result==1){
             return ResponseUtils.successResult("投递成功");

@@ -112,6 +112,7 @@ public class ResumeController {
             map.put("type", resume.getType());
             map.put("skill", resume.getSkill());
             map.put("experience", resume.getExperience());
+            map.put("sendDate", deliveries.getSendDate());
             mapList.add(map);
         }
         PageHelper.startPage(Integer.parseInt(page),Integer.parseInt(pageSize));
@@ -182,6 +183,7 @@ public class ResumeController {
             map.put("type", resume.getType());
             map.put("skill", resume.getSkill());
             map.put("experience", resume.getExperience());
+            map.put("sendDate", deliveries.getSendDate());
             mapList.add(map);
         }
         PageHelper.startPage(Integer.parseInt(page),Integer.parseInt(pageSize));
