@@ -49,7 +49,9 @@ public class ResumeController {
         String token= String.valueOf(request.getAttribute(JWTUtils.USER_TOKEN));
         DecodedJWT jwt=JWTUtils.verify(token);
         String userId=jwt.getSubject();
+        String resumeId = RadomUtils.creatId();
         Resumes resume=new Resumes();
+        resume.setResumeId(resumeId);
         resume.setUserId(userId);
         resume.setCareer((String) map.get("career"));
         resume.setType((String) map.get("type"));
@@ -98,6 +100,7 @@ public class ResumeController {
             Users user = userService.SelectAllById(userId);
             String recruitName = recruitService.getCareerByRecruitId(recruitId);
             Map<String, Object> map = new HashMap<>();
+            map.put("resumeId",resume.getResumeId());
             map.put("userId", userId);
             map.put("recruitId", recruitId);
             map.put("userName", user.getName());
@@ -135,6 +138,7 @@ public class ResumeController {
             return ResponseUtils.failResult(ResultCode.not_found,"暂无简历信息");
         }
         Map<String,Object> map=new HashMap<>();
+        map.put("resumeId",resume.getResumeId());
         map.put("userId",resume.getUserId());
         map.put("career",resume.getCareer());
         map.put("type",resume.getType());
@@ -169,6 +173,7 @@ public class ResumeController {
                 recruitId = deliveries.getRecruitId();
             }
             Map<String, Object> map = new HashMap<>();
+            map.put("resumeId",resume.getResumeId());
             map.put("userId", userId);
             map.put("recruitId", recruitId);
             map.put("userName", user.getName());
