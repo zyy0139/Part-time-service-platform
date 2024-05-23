@@ -29,4 +29,9 @@ public class ResumeServiceImpl implements ResumeService {
         Resumes resume=resumeMapper.getAllByUserId(userId);
         return resume;
     }
+
+    @Override
+    public Resumes getAllByResumeId(String resumeId) {
+        return resumeMapper.getAllByResumeId(resumeId);
+    }
 }

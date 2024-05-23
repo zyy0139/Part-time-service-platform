@@ -8,4 +8,5 @@ public interface ResumeMapper {
     public int addResume(Resumes resumes);
     public int updateResume(Resumes resumes);
     public Resumes getAllByUserId(String userId);
+    public Resumes getAllByResumeId(String resumeId);
 }

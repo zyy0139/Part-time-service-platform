@@ -17,4 +17,5 @@ public interface DeliveryMapper {
     public int getCountByStartAndEnd(Date start, Date end, String companyId);
     public int getCountByDate(Date date,String companyId);
     public int getCountByRecruitId(String recruitId);
+    public List<Deliveries> getAllBySendDate(Date sendDate);
 }

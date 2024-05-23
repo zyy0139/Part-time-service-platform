@@ -25,4 +25,8 @@
         select * from resume where userId=#{userId}
     </select>
 
+    <select id="getAllByResumeId" parameterType="string" resultMap="BaseResultMap">
+        select * from resume where resumeId=#{resumeId}
+    </select>
+
 </mapper>

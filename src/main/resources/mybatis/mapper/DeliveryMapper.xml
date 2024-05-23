@@ -8,7 +8,6 @@
         <result column="sendDate" jdbcType="DATE" javaType="java.util.Date" property="sendDate" />
     </resultMap>
 
-
     <select id="getAllByCompanyId" resultMap="BaseResultMap">
         select * from delivery where companyId=#{companyId}
     </select>
@@ -54,6 +53,10 @@
 
     <select id="getCountByRecruitId" resultType="java.lang.Integer">
         select count(*) from (select * from delivery where recruitId = #{recruitId}) as rid
+    </select>
+
+    <select id="getAllBySendDate" resultMap="BaseResultMap">
+        select * from delivery where sendDate=#{sendDate}
     </select>
 
 </mapper>

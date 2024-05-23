@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import com.zyy.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -128,7 +128,7 @@ public class ResumeController {
     }
 
     @GetMapping("/getResume")
-    public Result getResume(HttpServletRequest request){
+    public Result getResume(HttpServletRequest request){ //学生用户使用
         String header = request.getHeader("Authorization");
         String token = header.substring(18);
         DecodedJWT jwt = JWTUtils.verify(token);
@@ -144,6 +144,36 @@ public class ResumeController {
         map.put("type",resume.getType());
         map.put("skill",resume.getSkill());
         map.put("experience",resume.getExperience());
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
+    @GetMapping("/getResumeInfo")
+    public Result getResumeInfo(@RequestParam String resumeId,@RequestParam String recruitId, HttpServletRequest request){//企业用户使用
+        String header = request.getHeader("Authorization");
+        String token = header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        Resumes resume = resumeService.getAllByResumeId(resumeId);
+        String userId=resume.getUserId();
+        Users user = userService.SelectAllById(userId);
+        String recruitName = recruitService.getCareerByRecruitId(recruitId);
+        Deliveries delivery = deliveryService.getMessage(userId, companyId,recruitId);
+        Map<String,Object> map=new HashMap<>();
+        map.put("resumeId",resumeId);
+        map.put("userId",userId);
+        map.put("userName", user.getName());
+        map.put("userSex", user.getSex());
+        map.put("userAge", user.getAge());
+        map.put("userAddress", user.getAddress());
+        map.put("userSchool", user.getSchool());
+        map.put("userPhone", user.getPhone());
+        map.put("userProfession", user.getProfession());
+        map.put("career", resume.getCareer());
+        map.put("recruitName", recruitName);
+        map.put("type", resume.getType());
+        map.put("skill", resume.getSkill());
+        map.put("experience", resume.getExperience());
+        map.put("sendDate", delivery.getSendDate());
         return ResponseUtils.successResult("查询成功",map);
     }
 
@@ -197,6 +227,54 @@ public class ResumeController {
         Map<String,Object> map1=new HashMap<>();
         map1.put("total",total);
         map1.put("resumeList",resumeList.getList());
+        return ResponseUtils.successResult("查询成功",map1);
+    }
+
+    @GetMapping("/getByTodayRecommend")
+    public Result getByTodayRecommend(){ //今日推荐
+        Date today = DateUtils.getNow();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String todayStr = sdf.format(today);
+        Date date = null;
+        try{
+            DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate=LocalDate.parse(todayStr,formatter);
+            localDate=localDate.minusDays(1);
+            date= java.sql.Date.valueOf(localDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Deliveries> deliveryList=deliveryService.getAllBySendDate(date);
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        for (Deliveries deliveries : deliveryList) {
+            String userId = deliveries.getUserId();
+            String recruitId = deliveries.getRecruitId();
+            Resumes resume = resumeService.getAllByUserId(userId);
+            Users user = userService.SelectAllById(userId);
+            String recruitName = recruitService.getCareerByRecruitId(recruitId);
+            Map<String, Object> map = new HashMap<>();
+            map.put("resumeId",resume.getResumeId());
+            map.put("userId", userId);
+            map.put("recruitId", recruitId);
+            map.put("userName", user.getName());
+            map.put("userSex", user.getSex());
+            map.put("userAge", user.getAge());
+            map.put("userAddress", user.getAddress());
+            map.put("userSchool", user.getSchool());
+            map.put("userPhone", user.getPhone());
+            map.put("userProfession", user.getProfession());
+            map.put("career", resume.getCareer());
+            map.put("recruitName", recruitName);
+            map.put("type", resume.getType());
+            map.put("skill", resume.getSkill());
+            map.put("experience", resume.getExperience());
+            map.put("sendDate", deliveries.getSendDate());
+            mapList.add(map);
+        }
+        int total= deliveryList.size();
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("resumeList",mapList);
         return ResponseUtils.successResult("查询成功",map1);
     }
 
