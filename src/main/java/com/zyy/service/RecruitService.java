@@ -12,6 +12,7 @@ public interface RecruitService {
     public int deleteByRecruitIdAndCompanyId(String recruitId,String companyId);
     public int updateByRecruitIdAndCompanyId(Recruits recruits);
     public Recruits selectByRecruitIdAndCompanyId(String recruitId,String companyId);
+    public Recruits selectAllByRecruitId(String recruitId);
     public PageInfo<Recruits> selectAll(int page,int pageSize);
     public int selectRecruitNum();
     public int getNumber(String recruitId);
@@ -25,4 +26,5 @@ public interface RecruitService {
     public List<String> getCareerList(String companyId);
     public List<Map<String,Object>> getRecruitCountList(String start,String end);
     public List<Map<String, Object>> getRecruitCountByType();
+    public List<Recruits> selectAllByReleaseDate(Date releaseDate);
 }

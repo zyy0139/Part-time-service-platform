@@ -51,6 +51,11 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
+    public Recruits selectAllByRecruitId(String recruitId) {
+        return recruitMapper.selectAllByRecruitId(recruitId);
+    }
+
+    @Override
     public PageInfo<Recruits> selectAll(int page,int pageSize) {
         PageHelper.startPage(page,pageSize);
         List<Recruits> list=recruitMapper.selectAll();
@@ -193,5 +198,10 @@ public class RecruitServiceImpl implements RecruitService {
             list.add(map);
         }
         return list;
+    }
+
+    @Override
+    public List<Recruits> selectAllByReleaseDate(Date releaseDate) {
+        return recruitMapper.selectAllByReleaseDate(releaseDate);
     }
 }

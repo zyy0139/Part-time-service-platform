@@ -31,6 +31,10 @@
         select * from recruit where recruitId=#{recruitId} and companyId=#{companyId}
     </select>
 
+    <select id="selectAllByRecruitId" resultMap="BaseResultMap">
+        select * from recruit where recruitId=#{recruitId}
+    </select>
+
     <select id="selectAll" resultMap="BaseResultMap">
         select * from recruit
     </select>

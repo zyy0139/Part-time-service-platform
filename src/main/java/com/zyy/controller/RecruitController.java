@@ -15,6 +15,7 @@ import com.zyy.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -107,7 +108,7 @@ public class RecruitController {
     }
 
     @GetMapping("/getMessage")
-    public Result getMessage(@RequestParam String recruitId,HttpServletRequest request){
+    public Result getMessage(@RequestParam String recruitId,HttpServletRequest request){ //公司用户
         String header= request.getHeader("Authorization");
         String token=header.substring(18);
         DecodedJWT jwt=JWTUtils.verify(token);
@@ -118,6 +119,26 @@ public class RecruitController {
             return ResponseUtils.failResult("查询失败");
         }
         map.put("recruitId",recruit.getRecruitId());
+        map.put("career",recruit.getCareer());
+        map.put("type",recruit.getType());
+        map.put("number",recruit.getNumber());
+        map.put("message",recruit.getMessage());
+        map.put("salary",recruit.getSalary());
+        map.put("freefl",recruit.isFreefl());
+        map.put("releaseDate",recruit.getReleaseDate());
+        return ResponseUtils.successResult("查询成功",map);
+    }
+
+    @GetMapping("/getMessageInfo")
+    public Result getMessageInfo(@RequestParam String recruitId){ //学生用户
+        Map<String,Object> map=new HashMap<>();
+        Recruits recruit = recruitService.selectAllByRecruitId(recruitId);
+        Companies company=companyService.selectAllById(recruit.getCompanyId());
+        map.put("recruitId",recruit.getRecruitId());
+        map.put("companyName",company.getName());
+        map.put("companyAddress",company.getAddress());
+        map.put("companyEmail",company.getEmail());
+        map.put("companyPhone",company.getPhone());
         map.put("career",recruit.getCareer());
         map.put("type",recruit.getType());
         map.put("number",recruit.getNumber());
@@ -248,6 +269,46 @@ public class RecruitController {
     public Result getCountByType(){
         List<Map<String,Object>> list = recruitService.getRecruitCountByType();
         return ResponseUtils.successResult("查询成功",list);
+    }
+
+    @GetMapping("/getByTodayRecommend")
+    public Result getByTodayRecommend(){ //今日推荐
+        Date today = DateUtils.getNow();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String todayStr = sdf.format(today);
+        Date date = null;
+        try{
+            DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate localDate=LocalDate.parse(todayStr,formatter);
+            localDate=localDate.minusDays(1);
+            date= java.sql.Date.valueOf(localDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Recruits> recruitsList = recruitService.selectAllByReleaseDate(date);
+        List<Map<String,Object>> mapList=new ArrayList<>();
+        for(int i=0;i<recruitsList.size();i++){
+            Map<String,Object> map=new HashMap<>();
+            Companies company=companyService.selectAllById(recruitsList.get(i).getCompanyId());
+            map.put("recruitId",recruitsList.get(i).getRecruitId());
+            map.put("companyName",company.getName());
+            map.put("companyAddress",company.getAddress());
+            map.put("companyEmail",company.getEmail());
+            map.put("companyPhone",company.getPhone());
+            map.put("career",recruitsList.get(i).getCareer());
+            map.put("type",recruitsList.get(i).getType());
+            map.put("number",recruitsList.get(i).getNumber());
+            map.put("message",recruitsList.get(i).getMessage());
+            map.put("salary",recruitsList.get(i).getSalary());
+            map.put("freefl",recruitsList.get(i).isFreefl());
+            map.put("releaseDate",recruitsList.get(i).getReleaseDate());
+            mapList.add(map);
+        }
+        int total= recruitsList.size();
+        Map<String,Object> map1=new HashMap<>();
+        map1.put("total",total);
+        map1.put("recruitList",mapList);
+        return ResponseUtils.successResult("查询成功",map1);
     }
 
 }

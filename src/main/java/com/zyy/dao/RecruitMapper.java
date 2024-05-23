@@ -10,6 +10,7 @@ public interface RecruitMapper {
     public int deleteByRecruitIdAndCompanyId(String recruitId,String companyId);
     public int updateByRecruitIdAndCompanyId(Recruits recruits);
     public Recruits selectByRecruitIdAndCompanyId(String recruitId,String companyId);
+    public Recruits selectAllByRecruitId(String recruitId);
     public List<Recruits> selectAll();
     public int selectRecruitNum();
     public int updateNumber(String recruitId,int number);
