@@ -17,5 +17,5 @@ public interface DeliveryService {
     public Deliveries getMessage(String userId,String companyId,String recruitId);
     public List<Map<String,Object>> getCountByDate(String start, String end, String companyId);
     public List<Map<String,Object>> getCountByRecruitId(String companyId);
-    public List<Deliveries> getAllBySendDate(Date sendDate);
+    public List<Deliveries> getAllBySendDate(Date sendDate,String companyId);
 }

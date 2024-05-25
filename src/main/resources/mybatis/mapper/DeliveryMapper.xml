@@ -56,7 +56,7 @@
     </select>
 
     <select id="getAllBySendDate" resultMap="BaseResultMap">
-        select * from delivery where sendDate=#{sendDate}
+        select * from delivery where sendDate=#{sendDate} and companyId=#{companyId}
     </select>
 
 </mapper>

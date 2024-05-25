@@ -231,7 +231,7 @@ public class ResumeController {
     }
 
     @GetMapping("/getByTodayRecommend")
-    public Result getByTodayRecommend(){ //今日推荐
+    public Result getByTodayRecommend(HttpServletRequest request){ //今日推荐
         Date today = DateUtils.getNow();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String todayStr = sdf.format(today);
@@ -244,7 +244,11 @@ public class ResumeController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<Deliveries> deliveryList=deliveryService.getAllBySendDate(date);
+        String header = request.getHeader("Authorization");
+        String token = header.substring(18);
+        DecodedJWT jwt=JWTUtils.verify(token);
+        String companyId=jwt.getSubject();
+        List<Deliveries> deliveryList=deliveryService.getAllBySendDate(date,companyId);
         List<Map<String,Object>> mapList=new ArrayList<>();
         for (Deliveries deliveries : deliveryList) {
             String userId = deliveries.getUserId();

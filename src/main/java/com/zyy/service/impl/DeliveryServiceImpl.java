@@ -115,7 +115,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public List<Deliveries> getAllBySendDate(Date sendDate) {
-        return deliveryMapper.getAllBySendDate(sendDate);
+    public List<Deliveries> getAllBySendDate(Date sendDate,String companyId) {
+        return deliveryMapper.getAllBySendDate(sendDate,companyId);
     }
 }
