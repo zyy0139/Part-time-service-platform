@@ -1,5 +1,6 @@
 package com.zyy.service;
 
+import com.github.pagehelper.PageInfo;
 import com.zyy.entity.Deliveries;
 
 import java.util.Date;
@@ -7,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface DeliveryService {
-    public List<Deliveries> getAllByCompanyId(String companyId);
-    public List<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruiterId);
+    public PageInfo<Deliveries> getAllByCompanyId(String companyId,int page, int pageSize);
+    public PageInfo<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruiterId, int page, int pageSize);
     public int getNumByCompanyId(String companyId);
     public int getNumByCompanyIdAndRecruitId(String companyId, String recruiterId);
     public int addDelivery(Deliveries deliveries);

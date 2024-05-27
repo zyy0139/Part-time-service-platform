@@ -1,5 +1,7 @@
 package com.zyy.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zyy.dao.DeliveryMapper;
 import com.zyy.dao.RecruitMapper;
 import com.zyy.entity.Deliveries;
@@ -21,15 +23,19 @@ public class DeliveryServiceImpl implements DeliveryService {
     private RecruitMapper recruitMapper;
 
     @Override
-    public List<Deliveries> getAllByCompanyId(String companyId) {
-        List<Deliveries> deliveryList = deliveryMapper.getAllByCompanyId(companyId);
-        return deliveryList;
+    public PageInfo<Deliveries> getAllByCompanyId(String companyId, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<Deliveries> list = deliveryMapper.getAllByCompanyId(companyId);
+        PageInfo<Deliveries> pageInfo = new PageInfo<>(list);
+        return pageInfo;
     }
 
     @Override
-    public List<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruiterId) {
+    public PageInfo<Deliveries> getAllByCompanyIdAndRecruitId(String companyId, String recruiterId, int page, int pageSize) {
+        PageHelper.startPage(page, pageSize);
         List<Deliveries> deliveryList = deliveryMapper.getAllByCompanyIdAndRecruitId(companyId, recruiterId);
-        return deliveryList;
+        PageInfo<Deliveries> pageInfo = new PageInfo<>(deliveryList);
+        return pageInfo;
     }
 
     @Override
