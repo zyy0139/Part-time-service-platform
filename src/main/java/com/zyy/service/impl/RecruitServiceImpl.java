@@ -83,6 +83,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public PageInfo<Recruits> selectAllBySearch(String address, Date releaseDate, String type, int page, int pageSize) {
+        PageHelper.startPage(page,pageSize);
         List<Recruits> list=new ArrayList<>();
         if(!address.isEmpty()){
             List<String> companyIdList=companyMapper.selectIdByAddress(address);
@@ -112,9 +113,7 @@ public class RecruitServiceImpl implements RecruitService {
         } else{
             list=recruitMapper.selectAllByTypeAndReleaseDate(type,releaseDate);
         }
-        PageHelper.startPage(page,pageSize);
-        PageInfo<Recruits> recruits=new PageInfo<>(list);
-        return recruits;
+        return new PageInfo<>(list);
     }
 
     @Override
